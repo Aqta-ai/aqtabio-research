@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+title: "AqtaBio: pre-etiologic zoonotic spillover risk forecasting"
+message: "If you reference AqtaBio in academic or policy work prior to the medRxiv preprint, please cite this repository."
+type: software
+version: "0.1.0"
+date-released: "2026-04-28"
+authors:
+  - family-names: Chueayen
+    given-names: Anya
+    affiliation: "Aqta Technologies Limited"
+    email: hello@aqta.ai
+abstract: >-
+  Pre-etiologic zoonotic spillover risk forecasting at 25 km tile resolution.
+  XGBoost gradient-boosted classifier with SHAP TreeExplainer attributions over
+  open environmental, ecological, and socioeconomic data layers (ERA5, Hansen
+  Global Forest Change, WorldPop, FAO GLW4, IUCN, ACLED, MODIS, OpenStreetMap).
+  Validation cohort: twenty-five historical zoonotic spillover events spanning
+  2003 to 2024, anchored to publicly verifiable WHO Disease Outbreak News, ECDC
+  weekly bulletins, and national Ministry of Health notification dates. Eight-
+  layer governance framework with HITL sign-off, model version pinning, immutable
+  audit trail, and bias monitoring. MCP server with eleven tools, FHIR R4
+  transaction Bundle output, A2A v1.0 agent card, SNOMED CT pathogen codes.
+  v0.1.0 research preview, not approved for clinical decision-making.
+keywords:
+  - zoonotic-spillover
+  - pandemic-preparedness
+  - epidemiology
+  - early-warning
+  - xgboost
+  - shap
+  - mcp
+  - fhir
+  - public-health
+  - biosecurity
+  - one-health
+license: Apache-2.0
+repository-code: "https://github.com/Aqta-ai/aqtabio-research"
+url: "https://aqta.ai"
+preferred-citation:
+  type: software
+  title: "AqtaBio: pre-etiologic zoonotic spillover risk forecasting (v0.1.0)"
+  authors:
+    - family-names: Chueayen
+      given-names: Anya
+      affiliation: "Aqta Technologies Limited"
+  year: 2026
+  url: "https://github.com/Aqta-ai/aqtabio-research"
+  notes: >-
+    A formal medRxiv preprint with an aggregate live retrospective evaluation
+    across the full 25-event cohort is in preparation. Target submission: Q3 2026.

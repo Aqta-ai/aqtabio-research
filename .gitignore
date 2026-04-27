@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Editor
+.DS_Store
+.vscode/
+.idea/
+
+# Build artefacts
+dist/
+build/
+*.log
+
+# Local notebooks
+.ipynb_checkpoints/
+
+# Models (distributed under separate agreement; see README)
+models/**/*.ubj
+models/**/*.pkl

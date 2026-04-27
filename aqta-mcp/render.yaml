@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aqta-mcp
+    runtime: docker
+    dockerfilePath: ./aqta-mcp/Dockerfile
+    dockerContext: ./aqta-mcp
+    region: frankfurt
+    plan: free
+    envVars:
+      - key: AQTA_API_URL
+        value: https://kfj3domgfgegnd7aqtfwpdj56y0evnyv.lambda-url.eu-west-1.on.aws
+      - key: ANTHROPIC_API_KEY
+        sync: false
