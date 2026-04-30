@@ -52,7 +52,14 @@ _AGENT_CARD = {
         "(Ebola, H5N1, CCHF, West Nile, SARS-CoV-2). Returns HL7 FHIR R4 resources."
     ),
     "version": "0.1.0",
+    # Top-level url is REQUIRED by the A2A v1.0 AgentCard schema. Clients that
+    # auto-discover via /.well-known/agent.json (Prompt Opinion among them)
+    # read this field to know where to call. Omitting it makes
+    # `jq '.url'` return null and silently breaks agent-discovery flows even
+    # though the rest of the card is well-formed.
+    "url": "https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp",
     "protocol_version": "1.0",
+    "protocolVersion": "1.0",  # camelCase alias per A2A v1.0 JSON representation
     "provider": {
         "organization": "Aqta Technologies Limited",
         "url": "https://aqtabio.org",
@@ -129,6 +136,11 @@ _AGENT_CARD = {
             "description": "Complete HL7 FHIR R4 transaction Bundle (RiskAssessment + DetectedIssue + 12×Observation) with per-entry POST requests, ready to submit to any FHIR server.",
             "tags": ["fhir", "integration"],
         },
+        {
+            "name": "get_disease_x_risk",
+            "description": "Pathogen-agnostic pre-spillover risk score addressing the WHO R&D Blueprint's Disease X priority. Aggregates per-pathogen risks into a single 'any zoonotic emergence' signal for the unknown pathogen of the next pandemic.",
+            "tags": ["disease-x", "blueprint", "novel"],
+        },
     ],
     "pathogens_covered": [
         {"id": "ebola", "display": "Ebola Virus Disease", "snomed": "37109004", "status": "operational"},
@@ -186,5 +198,54 @@ async def info():
     })
 
 
-# Must be mounted LAST so the well-known + healthz + info routes take precedence.
-app.mount("/", mcp.streamable_http_app())
+# Dual MCP transport so older AND newer clients both connect:
+#
+#   POST /mcp         — Streamable HTTP (MCP 2025-03-26+, current spec).
+#                       Used by Claude Desktop, mcp-inspector, recent
+#                       Prompt Opinion versions.
+#   GET  /sse         — legacy SSE channel (MCP 2024-11-05 spec).
+#   POST /messages/   — legacy paired POST endpoint.
+#                       Used by older Prompt Opinion clients and any MCP
+#                       integration written before the Streamable HTTP
+#                       unification.
+#
+# Implementation note: the naive `app.mount("/", subapp)` for both fails
+# because Starlette dispatches the FIRST matching mount-prefix, so the
+# second subapp is unreachable. Instead we extract individual routes
+# from each subapp and append them to the main app's router. Each
+# subapp's lifespan_context (which starts the MCP session manager that
+# the routes depend on) is wired into FastAPI's startup/shutdown hooks
+# so both managers are running when requests arrive.
+import contextlib  # noqa: E402
+
+_sse_subapp = mcp.sse_app()
+_streamable_subapp = mcp.streamable_http_app()
+
+for _route in _sse_subapp.router.routes:
+    app.router.routes.append(_route)
+for _route in _streamable_subapp.router.routes:
+    app.router.routes.append(_route)
+
+
+@app.on_event("startup")
+async def _start_mcp_session_managers():
+    """Bring up both transports' MCP session managers."""
+    app.state._mcp_lifespan_cms = []
+    for sub in (_sse_subapp, _streamable_subapp):
+        ctx_factory = sub.router.lifespan_context
+        if ctx_factory is None:
+            continue
+        # Starlette's lifespan_context is a callable; passing the subapp
+        # returns the async context manager.
+        cm = ctx_factory(sub)
+        await cm.__aenter__()
+        app.state._mcp_lifespan_cms.append(cm)
+
+
+@app.on_event("shutdown")
+async def _stop_mcp_session_managers():
+    for cm in reversed(getattr(app.state, "_mcp_lifespan_cms", [])):
+        try:
+            await cm.__aexit__(None, None, None)
+        except Exception:  # nosec: shutdown best-effort
+            pass

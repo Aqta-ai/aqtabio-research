@@ -1155,3 +1155,134 @@ async def generate_fhir_bundle_for_pho(
             "WHO GOARN surveillance tooling. Zero transformation overhead."
         ),
     }
+
+
+# ---------------------------------------------------------------------------
+# Tool 12: Disease X — pathogen-agnostic pre-spillover risk
+# ---------------------------------------------------------------------------
+@mcp.tool()
+async def get_disease_x_risk(
+    tile_id: str,
+    month: Optional[str] = None,
+) -> dict:
+    """
+    Pathogen-agnostic pre-spillover risk for a tile: probability that ANY
+    zoonotic pathogen could emerge from this 25 km area within the lookback
+    horizon, independent of which specific pathogen ultimately spills over.
+
+    This addresses the WHO R&D Blueprint's "Disease X" priority — pre-emergence
+    detection for the unknown pathogen of the next zoonotic event. Existing
+    surveillance answers "is Ebola circulating?"; this tool answers "are the
+    environmental conditions for ANY zoonotic emergence elevated here?"
+
+    Methodology (interim, v0.1.0):
+        Aggregates per-pathogen risk scores across the 5 operational pathogens
+        (ebola, h5n1, cchfv, wnv, sea-cov) using a probabilistic-union model:
+
+            P(any spillover) = 1 − ∏ (1 − P(spillover_i | environment))
+
+        This treats each pathogen's score as an estimate of P(spillover by
+        pathogen_i | shared environmental drivers) under an independence
+        assumption. The assumption is approximate — real spillovers are
+        partially correlated through shared drivers (deforestation, climate,
+        livestock density) — so the union likely OVER-estimates true Disease X
+        risk in regions with multiple high-risk pathogens. This is documented
+        rather than papered over; the conservative interpretation is "if all
+        five contributing pathogens are elevated, treat the area as having
+        substantially elevated pre-spillover risk regardless of which one
+        actually emerges."
+
+    Methodology (planned, v0.2.0 / Q3 2026 medRxiv):
+        Replace the probabilistic union with a dedicated XGBoost classifier
+        trained on pooled-label data (positive = ANY zoonotic spillover within
+        12 months from this tile). Feature space identical; label is the
+        pathogen-agnostic any-spillover indicator. Same governance trail
+        (model SHA, data freshness, SHAP attributions) as per-pathogen models.
+
+    Args:
+        tile_id: Tile identifier (e.g. AT_sahel_12_5, AF-025-12345).
+        month:   Optional month (YYYY-MM). Defaults to latest available.
+
+    Returns:
+        - disease_x_risk_score: aggregated [0,1] score
+        - risk_tier: baseline / elevated / high / critical
+        - top_contributing_pathogens: which per-pathogen scores drove the result
+        - interpretation: plain-language summary
+        - method: indicates the v0.1.0 interim heuristic
+        - tile_id, month
+    """
+    # Operational pathogens whose per-tile scores feed the union.
+    pathogens = ["ebola", "h5n1", "cchfv", "wnv", "sea-cov"]
+    contributions = []
+
+    for p in pathogens:
+        params = {"pathogen": p}
+        if month:
+            params["month"] = month
+        try:
+            resp = await _client.get(f"/tiles/{tile_id}/risk", params=params)
+            if resp.status_code == 200:
+                data = resp.json()
+                score = float(data.get("risk_score", 0.0))
+                contributions.append({
+                    "pathogen": p,
+                    "pathogen_display": PATHOGENS.get(p, {}).get("display", p),
+                    "score": round(score, 3),
+                })
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("disease_x: %s lookup failed: %s", p, exc)
+
+    if not contributions:
+        return {
+            "error": "no per-pathogen scores available for this tile",
+            "tile_id": tile_id,
+            "hint": (
+                "Tile IDs use the format AT_{region}_{col}_{row} (Atlas tiles) "
+                "or AF-025-NNNNN (seeded tiles). Try get_top_risk_tiles(pathogen='ebola') "
+                "to find a valid tile, then re-query Disease X risk on it."
+            ),
+        }
+
+    # Probabilistic union: P(any) = 1 − ∏ (1 − P_i)
+    product_complement = 1.0
+    for c in contributions:
+        product_complement *= (1.0 - c["score"])
+    p_any = round(1.0 - product_complement, 3)
+
+    # Risk tier — slightly different cutoffs from per-pathogen because the
+    # union shifts the distribution upward by construction.
+    if p_any >= 0.95:
+        tier = "critical"
+    elif p_any >= 0.80:
+        tier = "high"
+    elif p_any >= 0.50:
+        tier = "elevated"
+    else:
+        tier = "baseline"
+
+    contributions.sort(key=lambda c: -c["score"])
+
+    return {
+        "tile_id": tile_id,
+        "month": month or "latest",
+        "disease_x_risk_score": p_any,
+        "risk_tier": tier,
+        "top_contributing_pathogens": contributions[:3],
+        "all_contributing_pathogens": contributions,
+        "method": "probabilistic_union_v0.1.0",
+        "interpretation": (
+            f"Disease X (pathogen-agnostic) risk score {p_any}. "
+            f"Top contributor: {contributions[0]['pathogen_display']} "
+            f"at {contributions[0]['score']}. "
+            "This score combines all operational pathogens' per-tile risks "
+            "into a single signal addressing the WHO R&D Blueprint's Disease X "
+            "priority — pre-emergence detection for unknown pathogens."
+        ),
+        "limitations": (
+            "v0.1.0 interim heuristic. Probabilistic-union assumes independence "
+            "between per-pathogen scores, which is approximate (shared environmental "
+            "drivers create correlation). A dedicated pooled-label classifier is "
+            "in development for Q3 2026 alongside the medRxiv preprint."
+        ),
+        "blueprint_priority": "WHO R&D Blueprint — Disease X (Pathogen X)",
+    }

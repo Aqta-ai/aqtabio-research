@@ -1,6 +1,6 @@
 # AqtaBio — Research artefacts
 
-Pre-etiologic zoonotic-spillover risk forecasting at 25 km tile resolution.
+Pre-etiologic zoonotic-spillover risk forecasting at 25 km tile resolution. Includes the **first deployed pathogen-agnostic Disease X tool** addressing the WHO R&D Blueprint's eleventh priority — pre-emergence detection for the unknown pathogen of the next pandemic.
 
 This repository is the **public research mirror** for the AqtaBio platform built by [Aqta Technologies Limited](https://aqta.ai) (Dublin, Ireland). It contains the methodology, validation cohort, governance framework, regulatory pathway note, MCP server source, and forthcoming-preprint scaffolding. The closed product source — operational infrastructure, deployment configuration, customer-facing dashboard, internal pitch material — is not in this repository and is not part of the open release.
 
@@ -16,7 +16,7 @@ This repository is the **public research mirror** for the AqtaBio platform built
 
 | Path | Purpose |
 |---|---|
-| [`aqta-mcp/`](aqta-mcp/) | Public MCP (Model Context Protocol) server source. Eleven tools, FHIR R4 native, A2A v1.0 agent card, SNOMED CT pathogen codes. Live at `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`. |
+| [`aqta-mcp/`](aqta-mcp/) | Public MCP (Model Context Protocol) server source. **Twelve tools** including `get_disease_x_risk` (pathogen-agnostic), FHIR R4 native, A2A v1.0 agent card, SNOMED CT pathogen codes. Live at `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`. |
 | [`aqta_bio/backtesting/historical_events.py`](aqta_bio/backtesting/historical_events.py) | The 25-event historical spillover cohort (2003–2024), each anchored to a publicly verifiable WHO Disease Outbreak News, ECDC weekly bulletin, or national MoH notification date. |
 | [`aqta_bio/governance/`](aqta_bio/governance/) | The 8-layer AqtaCore governance framework: data provenance, SHAP feature hash, model version pinning, staleness circuit breaker, HITL sign-off queue, RBAC, immutable audit log, bias monitoring. |
 | [`aqta_bio/model/`](aqta_bio/model/) | XGBoost + SHAP framework code and per-pathogen model cards. |
