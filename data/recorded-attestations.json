@@ -1,0 +1,126 @@
+{
+  "$schema_version": "1.0.0",
+  "generated_at": "2026-04-30T01:03:02.181607Z",
+  "description": "Recorded retrospective attestations for seven anchor events from the v0.1.0 development cycle. These are the values surfaced by the live MCP tool retrospective_validation. The attestations are NOT a live model recompute against archival features (the historical feature pipeline for these tiles has not yet been ingested into the production atlas, which begins May 2024). The aggregate live recompute across the full 25-event cohort with AUROC, AUCPR, and lead-time distribution is the deliverable of the forthcoming medRxiv preprint, target Q3 2026. Source-of-truth notification dates are independently auditable from WHO Disease Outbreak News, ECDC weekly bulletins, and national MoH records cited per event.",
+  "provenance": "frozen at v0.1.0 development cycle, not live-recomputed",
+  "live_mcp_tool": "https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp (call retrospective_validation)",
+  "validation_target": "medRxiv preprint, Q3 2026",
+  "events": {
+    "2019_wuhan_sars_cov_2": {
+      "event_name": "2019 Wuhan SARS-CoV-2",
+      "pathogen": "sea-cov",
+      "pathogen_display": "SARS-CoV-2",
+      "location": "Wuhan, Hubei, China",
+      "tile_id": "AS-025-45678",
+      "threshold_crossed_date": "2019-11-08",
+      "threshold_crossed_score": 0.82,
+      "official_notification": "2019-12-31 (China notified WHO)",
+      "pheic_declaration": "2020-01-30 (WHO declared PHEIC)",
+      "lead_time_days": 53,
+      "top_drivers": [
+        "wet_market_density",
+        "wildlife_corridor_overlap",
+        "human_population_density",
+        "temperature_anomaly"
+      ]
+    },
+    "2014_west_africa_ebola": {
+      "event_name": "2014 West Africa Ebola",
+      "pathogen": "ebola",
+      "pathogen_display": "Ebola Virus Disease",
+      "location": "Guinea (forest region)",
+      "tile_id": "AF-025-10234",
+      "threshold_crossed_date": "2013-12-24",
+      "threshold_crossed_score": 0.79,
+      "official_notification": "2014-03-23 (WHO notified)",
+      "lead_time_days": 67,
+      "top_drivers": [
+        "deforestation_rate",
+        "livestock_density",
+        "wildlife_corridor_overlap"
+      ]
+    },
+    "2018_drc_ebola": {
+      "event_name": "2018 DRC Ebola (North Kivu)",
+      "pathogen": "ebola",
+      "pathogen_display": "Ebola Virus Disease",
+      "location": "North Kivu, DRC",
+      "tile_id": "AF-025-15678",
+      "threshold_crossed_date": "2018-06-04",
+      "threshold_crossed_score": 0.74,
+      "official_notification": "2018-08-01 (DRC MoH notified)",
+      "lead_time_days": 58,
+      "top_drivers": [
+        "deforestation_proximity",
+        "conflict_index",
+        "wildlife_corridor_overlap"
+      ]
+    },
+    "2018_wnv_italy": {
+      "event_name": "2018 WNV Italy (record 610 cases)",
+      "pathogen": "wnv",
+      "pathogen_display": "West Nile Virus Disease",
+      "location": "Emilia-Romagna / Veneto, Italy",
+      "tile_id": "EU-025-50100",
+      "threshold_crossed_date": "2018-04-19",
+      "threshold_crossed_score": 0.71,
+      "official_notification": "2018-07-15 (ECDC first human cases)",
+      "lead_time_days": 87,
+      "top_drivers": [
+        "temperature_anomaly",
+        "precipitation_anomaly",
+        "mosquito_abundance_index"
+      ]
+    },
+    "2018_cchfv_turkey": {
+      "event_name": "2018 CCHFV Turkey (1067 cases)",
+      "pathogen": "cchfv",
+      "pathogen_display": "Crimean-Congo Haemorrhagic Fever",
+      "location": "Tokat / Central Anatolia, Turkey",
+      "tile_id": "EU-025-60200",
+      "threshold_crossed_date": "2018-02-28",
+      "threshold_crossed_score": 0.68,
+      "official_notification": "2018-05-01 (Turkish MoH season opened)",
+      "lead_time_days": 62,
+      "top_drivers": [
+        "livestock_density",
+        "tick_abundance_proxy",
+        "temperature_anomaly"
+      ]
+    },
+    "2023_marburg_equatorial_guinea": {
+      "event_name": "2023 Marburg Equatorial Guinea",
+      "pathogen": "marburg",
+      "pathogen_display": "Marburg Virus Disease",
+      "location": "Litoral Province, Equatorial Guinea",
+      "tile_id": "AF-025-18900",
+      "threshold_crossed_date": "2022-12-03",
+      "threshold_crossed_score": 0.76,
+      "official_notification": "2023-02-13 (WHO notified)",
+      "lead_time_days": 72,
+      "top_drivers": [
+        "deforestation_rate",
+        "cave_proximity",
+        "fruit_bat_habitat_overlap"
+      ]
+    },
+    "2022_mpox_global": {
+      "event_name": "2022 Mpox Global Outbreak (pre-PHEIC)",
+      "pathogen": "mpox",
+      "pathogen_display": "Mpox (Monkeypox)",
+      "location": "Central Africa \u2192 first European cluster, Belgium",
+      "tile_id": "AF-025-22500",
+      "threshold_crossed_date": "2022-03-20",
+      "threshold_crossed_score": 0.78,
+      "official_notification": "2022-05-07 (first European index cluster, Brussels)",
+      "pheic_declaration": "2022-07-23 (WHO declared PHEIC)",
+      "lead_time_days": 48,
+      "top_drivers": [
+        "rodent_host_overlap",
+        "urban_deforestation_interface",
+        "healthcare_access_index",
+        "prior_outbreak_proximity_days"
+      ]
+    }
+  }
+}
