@@ -2010,24 +2010,51 @@ async def get_patient_local_risk(
 # ---------------------------------------------------------------------------
 # Tool 16: SHARP-aware EHR FHIR write-back
 # ---------------------------------------------------------------------------
+# Hosts that emit_riskassessment_to_ehr is willing to write to without
+# explicit confirm_write=true. Public test sandboxes only — anything that
+# could plausibly host real PHI requires the caller to opt in.
+_EHR_WRITE_ALLOWED_HOSTS = (
+    "hapi.fhir.org",
+    "server.fire.ly",
+    "spark.incendi.no",
+    "fhir.smarthealthit.org",
+    "launch.smarthealthit.org",
+)
+
+
+def _is_safe_ehr_target(fhir_base: str) -> bool:
+    try:
+        from urllib.parse import urlparse
+        host = (urlparse(fhir_base).hostname or "").lower()
+    except Exception:
+        return False
+    return any(host == h or host.endswith("." + h) for h in _EHR_WRITE_ALLOWED_HOSTS)
+
+
 @mcp.tool()
 async def emit_riskassessment_to_ehr(
     sharp_context: Optional[dict] = None,
     pathogen: str = "ebola",
     month: Optional[str] = None,
+    confirm_write: bool = False,
 ) -> dict:
     """
     Round-trip a population-level FHIR `RiskAssessment` resource back to
     the patient's EHR FHIR server using the SHARP-propagated bearer token.
 
+    Defaults to **dry run**: the resource is built and returned in the
+    response under `dry_run_resource`, but no POST is issued. To actually
+    write to the EHR, pass `confirm_write=true` and ensure the SHARP
+    `fhir_server` is either a known public test sandbox (HAPI, smart on
+    fhir launch, fire.ly, spark) or that you have explicitly authorised
+    the destination. A non-sandbox host with `confirm_write=true` is
+    accepted but flagged in the response.
+
     Demonstrates the second half of SHARP context propagation — not just
     *reading* EHR data via the SMART-on-FHIR session, but *writing* an
     AqtaBio-derived resource back to the same EHR so the encounter has
     a durable, queryable surveillance signal attached to the patient
-    record. The platform's promise — "bridges EHR session credentials
-    directly into SHARP context, so you don't have to invent bespoke
-    token-handling solutions" — comes alive when you can see the
-    POST → resource URL → re-fetch loop end-to-end.
+    record.
 
     PHI minimisation: the RiskAssessment resource carries the patient
     reference but no clinical content beyond the population risk score;
@@ -2037,6 +2064,8 @@ async def emit_riskassessment_to_ehr(
         sharp_context: SHARP context dict (patient_id, fhir_server, access_token).
         pathogen:      Pathogen ID (default ebola).
         month:         YYYY-MM (default = latest).
+        confirm_write: Set true to actually POST. Default false returns
+                       the resource without writing.
     """
     ctx = _normalise_sharp(sharp_context)
     if not (ctx.patient() and ctx.fhir_base()):
@@ -2091,6 +2120,35 @@ async def emit_riskassessment_to_ehr(
     )}
 
     base = ctx.fhir_base().rstrip("/")
+    fhir_host_is_sandbox = _is_safe_ehr_target(base)
+
+    # Default = dry-run. Caller must opt in to writing.
+    if not confirm_write:
+        return {
+            "sharp_propagated": True,
+            "dry_run": True,
+            "would_post_to": f"{base}/RiskAssessment",
+            "fhir_host_is_known_sandbox": fhir_host_is_sandbox,
+            "dry_run_resource": fhir_resource,
+            "patient_reference": fhir_resource["subject"]["reference"],
+            "tile_id": tile_id,
+            "pathogen": pathogen,
+            "month": month,
+            "next_step": (
+                "Re-call with confirm_write=true to actually POST. For "
+                "non-sandbox FHIR hosts, the call is permitted but the "
+                "response will surface a `wrote_to_non_sandbox_host: true` "
+                "flag so the clinician's workspace can audit the action."
+            ),
+            "note": (
+                "Dry-run is the default to prevent accidental writes to a "
+                "real production EHR if a SHARP context is mis-configured. "
+                "PHI minimisation: the resource carries the patient "
+                "reference and population-level risk only — no clinical "
+                "content beyond the area's ecological drivers."
+            ),
+        }
+
     headers = {
         "Content-Type": "application/fhir+json",
         "Accept": "application/fhir+json",
@@ -2118,6 +2176,8 @@ async def emit_riskassessment_to_ehr(
 
     return {
         "sharp_propagated": True,
+        "dry_run": False,
+        "wrote_to_non_sandbox_host": not fhir_host_is_sandbox,
         "ehr_status": ehr_status,
         "ehr_resource_id": rid,
         "ehr_resource_url": rurl,

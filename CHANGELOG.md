@@ -12,6 +12,43 @@ summary of the same information.
 
 ---
 
+## 2026-05-08 (Prompt Opinion submission)
+
+**Added** — `aqta-mcp/promptopinion-submission.md`.
+
+  Standalone submission doc for the Prompt Opinion clinician
+  workspace. Covers the SHARP context propagation contract
+  (`patient_id`, `encounter_id`, `fhir_server`, `access_token`),
+  the two SHARP-aware tools (`get_patient_local_risk` and
+  `emit_riskassessment_to_ehr`), the PHI minimisation argument
+  (only `address.country` is retained), and the dry-run default
+  on EHR write-back. Live curl examples included.
+
+**Hardened** — `emit_riskassessment_to_ehr` defaults to dry-run.
+
+  Previously the tool POSTed to the SHARP-supplied `fhir_server`
+  on a single RPC, which means a mis-configured workspace could
+  accidentally write to a real production EHR. Now the default
+  behaviour returns the resource that *would* be written under
+  `dry_run_resource` along with `would_post_to` and a
+  `fhir_host_is_known_sandbox` flag (sandbox allowlist:
+  `hapi.fhir.org`, `server.fire.ly`, `spark.incendi.no`,
+  `fhir.smarthealthit.org`). The caller must pass
+  `confirm_write: true` to actually POST. Writes to non-sandbox
+  hosts are accepted but the response surfaces
+  `wrote_to_non_sandbox_host: true` so the workspace can audit
+  the action. The bearer token from the SHARP block continues to
+  be forwarded verbatim and is never stored on the AqtaBio side.
+
+  Source: [`aqta-mcp/server.py`](aqta-mcp/server.py).
+
+  Live image pinned to immutable tag `aqta-mcp:v0.1.1-promptopinion`
+  (digest `sha256:1679d0fcceff3c1a7a62140ccea015a0f6a9e868ced97212c
+  c6768dffebf0f6f`). App Runner service redeployed against the
+  versioned tag.
+
+---
+
 ## 2026-05-08 (later, again)
 
 **Renamed** — `/auth/judge-token` and `/auth/judge-exchange` to
