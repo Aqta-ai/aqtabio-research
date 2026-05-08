@@ -48,9 +48,11 @@ The full cohort definition with citations lives in [`aqta_bio/backtesting/histor
 
 ## Citation
 
-If you reference AqtaBio in academic work prior to the medRxiv preprint, please cite this repository and the live MCP endpoint:
+If you reference AqtaBio in academic, technical, or product work prior to the medRxiv preprint, please cite this repository and the live MCP endpoint:
 
 > Chueayen, A. (2026). *AqtaBio: pre-etiologic zoonotic spillover risk forecasting (v0.1.0).* Aqta Technologies Limited. https://github.com/Aqta-ai/aqtabio-research. Live MCP: https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp.
+
+For the dated record of when each component of the MCP server entered the public mirror, see [`CHANGELOG.md`](CHANGELOG.md). The canonical timestamp for any specific tool or formulation is the corresponding git commit on `main` of this repository.
 
 A formal preprint with the aggregate retrospective evaluation is in preparation. Target submission: Q3 2026 (medRxiv).
 
