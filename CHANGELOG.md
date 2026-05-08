@@ -12,6 +12,41 @@ summary of the same information.
 
 ---
 
+## 2026-05-08 (later, again)
+
+**Renamed** — `/auth/judge-token` and `/auth/judge-exchange` to
+`/auth/evaluator-token` and `/auth/evaluator-exchange`.
+
+  The old route names ship of "judge" framing that conflated
+  hackathon-judging with the actual user role (a public-health
+  responder evaluating predictions). The new names match the
+  dashboard's preview-access cookie naming and the public-mirror
+  README's "evaluator" terminology. Request body field on the
+  exchange endpoint renamed `judge_token` → `evaluator_token`.
+
+  Backwards compatibility: env vars `EVALUATOR_SESSION_SECRET` and
+  `EVALUATOR_ACCESS_CODE` are read first, with `JUDGE_SESSION_SECRET`
+  and `JUDGE_ACCESS_CODE` retained as fallback so the existing Lambda
+  env keeps working through the rotation window. The role string
+  "evaluator" is used for newly minted users; "judge" remains in the
+  `allowed_roles` set so legacy DB rows continue to validate.
+
+**Fixed** — `/health.data_freshness_hours` returned the 999.0 sentinel
+even when the prediction pipeline was current.
+
+  Root cause: the metric was computed from `MAX(features.as_of_date)`,
+  but `features.as_of_date` is a feature-engineering target date
+  (often a future calendar boundary), not a wall-clock ingestion
+  stamp. The aggregate either returned NULL or a far-future date and
+  the response collapsed to the default. Now reads
+  `MAX(computed_at) FROM tile_predictions`; falls back to
+  `MAX(features.as_of_date)` only if no predictions have been
+  computed yet. The per-tile `data_freshness` field on tile-risk
+  responses is also now the row's real `computed_at` instead of
+  `datetime.utcnow()`.
+
+---
+
 ## 2026-05-08 (later)
 
 **Added** — `2018_lassa_nigeria` anchor event in `retrospective_validation`.
