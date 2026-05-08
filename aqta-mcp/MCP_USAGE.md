@@ -169,7 +169,8 @@ curl -X POST https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp \
 
 Anchor events available: `2019_wuhan_sars_cov_2`, `2022_mpox_global`,
 `2014_west_africa_ebola`, `2018_drc_ebola`, `2018_wnv_italy`,
-`2018_cchfv_turkey`, `2023_marburg_equatorial_guinea`.
+`2018_cchfv_turkey`, `2023_marburg_equatorial_guinea`,
+`2018_lassa_nigeria`.
 
 ---
 

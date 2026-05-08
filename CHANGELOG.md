@@ -12,6 +12,40 @@ summary of the same information.
 
 ---
 
+## 2026-05-08 (later)
+
+**Added** — `2018_lassa_nigeria` anchor event in `retrospective_validation`.
+
+  Eighth historical anchor on the live MCP. Edo / Ondo / Ebonyi
+  states, Nigeria; threshold-crossing 2017-11-12 at score 0.73;
+  Nigeria CDC outbreak declaration 2018-01-22; lead time 71 days.
+  Drivers: mastomys rodent density, household grain storage proxy,
+  rainfall anomaly, healthcare access index. Source-of-truth date
+  is the Nigeria CDC declaration; cross-checkable against the 2018
+  WHO Disease Outbreak News for Lassa fever Nigeria.
+
+**Hardened** — Live MCP image pinned to immutable tag.
+
+  App Runner service `aqta-mcp` (eu-west-1) switched from
+  `aqta-mcp:latest` to `aqta-mcp:v0.1.0-submission` in ECR. The
+  manifest digest is locked at `sha256:a8031e5132ac4a1e51e481ca14b66
+  25338cf024efafee03f309706b235dd1f35`. An accidental push to
+  `:latest` can no longer change what the public live endpoint
+  serves. A local tarball backup of the same digest is held offline.
+
+**Cleaned** — Removed overclaim language from `/.well-known/agent.json`.
+
+  The agent card description previously read "Predicts pandemic
+  risk 53 days before WHO notification". Replaced with the
+  backtest-honest framing that already appears in the README:
+  per-pathogen ebola backtest AUROC up to 0.975 on held-out
+  time-aware splits, with aggregate AUROC / AUCPR / lead-time
+  distribution across the full 25-event cohort tracked as the
+  forthcoming medRxiv preprint deliverable. The same correction
+  was applied to the `retrospective_validation` skill description.
+
+---
+
 ## 2026-05-08
 
 **Added** — `optimise_sentinel_placement` MCP tool, `aqta-mcp/server.py`.
