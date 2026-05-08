@@ -16,26 +16,25 @@ This repository is the **public research mirror** for the AqtaBio platform built
 
 | Path | Purpose |
 |---|---|
-| [`aqta-mcp/`](aqta-mcp/) | Public MCP (Model Context Protocol) server source. **Twelve tools** including `get_disease_x_risk` (pathogen-agnostic), FHIR R4 native, A2A v1.0 agent card, SNOMED CT pathogen codes. Live at `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`. |
+| [`aqta-mcp/`](aqta-mcp/) | Public MCP (Model Context Protocol) server source. **Nineteen tools** including `optimise_sentinel_placement` (active-learning surveillance recommender), `get_disease_x_risk` (pathogen-agnostic), FHIR R4 native, A2A v1.0 agent card, SNOMED CT pathogen codes. Live at `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`. Usage examples in [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md). |
 | [`aqta_bio/backtesting/historical_events.py`](aqta_bio/backtesting/historical_events.py) | The 25-event historical spillover cohort (2003–2024), each anchored to a publicly verifiable WHO Disease Outbreak News, ECDC weekly bulletin, or national MoH notification date. |
 | [`aqta_bio/governance/`](aqta_bio/governance/) | The 8-layer AqtaCore governance framework: data provenance, SHAP feature hash, model version pinning, staleness circuit breaker, HITL sign-off queue, RBAC, immutable audit log, bias monitoring. |
 | [`aqta_bio/model/`](aqta_bio/model/) | XGBoost + SHAP framework code and per-pathogen model cards. |
-| [`docs/research/`](docs/research/) | Methodology, validation framework, preprint outline, credibility audit, researcher API guide. |
+| [`docs/research/`](docs/research/) | Methodology, validation framework, and known-limitations log. |
 | [`docs/regulatory/`](docs/regulatory/ce-marking-and-eu-ai-act.md) | EU AI Act (Regulation (EU) 2024/1689) Annex III §5(a) classification + 12-month conformity roadmap aligned to ISO/IEC 42001:2023. |
 
 ## What is **not** here
 
 This is the research mirror; it is not a runnable copy of the production system. The closed source includes the FastAPI backend (`aqta_bio/api/`), the Next.js dashboard (`aqta-bio-dashboard/`), the data ingestion pipelines (`aqta_bio/ingest/`), AWS infrastructure and Terraform configuration, deployment scripts, internal pitch material, and proprietary brand assets. Some files included here import from those private modules (for example, `aqta_bio.config.get_database_url`); those imports will not resolve in isolation and are present only for inspection.
 
-To exercise the live system, use the public MCP endpoint listed above or the public REST endpoints documented in [`docs/research/RESEARCHER_GUIDE.md`](docs/research/RESEARCHER_GUIDE.md).
+To exercise the live system, use the public MCP endpoint listed below. Curl examples in [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md). A reference Python agent (Google ADK + Gemini) and a no-key smoke test live alongside the server source.
 
 ## Live endpoints
 
 All endpoints are public and require no authentication. The canonical web entry point is <https://aqtabio.org/mcp> (connection snippets, sample prompts, and link-out to the live MCP); the AWS App Runner URL below is the programmatic target an MCP client connects to.
 
-- **MCP server (programmatic)**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp` — eleven tools including `retrospective_validation`, `get_risk_score`, `get_hotspots`, `generate_outbreak_briefing`, `emit_fhir_bundle`. Documentation at <https://aqtabio.org/mcp>.
+- **MCP server (programmatic)**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp` — nineteen tools including `optimise_sentinel_placement`, `retrospective_validation`, `get_risk_score`, `get_hotspots`, `generate_outbreak_briefing`, `submit_to_hapi_fhir`, `self_test`. Streamable HTTP transport (set `Accept: application/json, text/event-stream`). See [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md).
 - **A2A v1.0 agent card**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/.well-known/agent.json` — RFC 8615 well-known URI declaring capabilities and per-pathogen SNOMED CT codes.
-- **Public REST API**: `https://kfj3domgfgegnd7aqtfwpdj56y0evnyv.lambda-url.eu-west-1.on.aws` — `/tiles`, `/pathogens/{p}/hotspot-count`, etc. See [`docs/research/RESEARCHER_GUIDE.md`](docs/research/RESEARCHER_GUIDE.md).
 
 ## Validation cohort
 
@@ -53,7 +52,7 @@ If you reference AqtaBio in academic work prior to the medRxiv preprint, please 
 
 > Chueayen, A. (2026). *AqtaBio: pre-etiologic zoonotic spillover risk forecasting (v0.1.0).* Aqta Technologies Limited. https://github.com/Aqta-ai/aqtabio-research. Live MCP: https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp.
 
-A formal preprint with the aggregate retrospective evaluation is in preparation; outline at [`docs/research/preprint-outline.md`](docs/research/preprint-outline.md). Target submission: Q3 2026.
+A formal preprint with the aggregate retrospective evaluation is in preparation. Target submission: Q3 2026 (medRxiv).
 
 ## Licence
 
