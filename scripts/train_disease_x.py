@@ -13,9 +13,8 @@ Prerequisites:
       `tile_predictions` populated for the validation cohort tiles.
     - Historical features ingested for the lookback windows of every
       event in HISTORICAL_SPILLOVERS (this is the medRxiv preprint
-      data-engineering blocker; see docs/research/known-limitations.md
-      §1 for status). Without this, the script will warn and use only
-      whatever features are present.
+      data-engineering blocker). Without this, the script will warn
+      and use only whatever features are present.
 
 Usage:
     export DATABASE_URL="postgresql://..."
@@ -182,7 +181,7 @@ def train(args: argparse.Namespace) -> None:
     pos_rows = load_features_for_pairs(engine, pos_pairs, label_value=1)
     if not pos_rows:
         logger.error("No positive features loaded. Has the historical feature pipeline been ingested?")
-        logger.error("See docs/research/known-limitations.md §1 — this is the medRxiv preprint blocker.")
+        logger.error("This is the medRxiv preprint data-engineering blocker.")
         sys.exit(3)
     logger.info("Positive rows with features: %d", len(pos_rows))
 

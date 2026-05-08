@@ -39,8 +39,7 @@ The recorded model scores and threshold-crossing dates are **development-
 cycle outputs**, useful as illustrative anchors against the historical
 timeline. The live cross-pathogen recompute with AUROC, AUCPR, and
 lead-time distribution is the deliverable of the forthcoming medRxiv
-preprint, targeted Q3 2026. See [`docs/research/known-limitations.md`](../docs/research/known-limitations.md)
-for the full provenance trail.
+preprint, targeted Q3 2026.
 
 ## Citation
 

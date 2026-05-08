@@ -6,11 +6,11 @@ This repository is the **public research mirror** for the AqtaBio platform built
 
 ## Status
 
-**v0.1.0 — research preview.** Not approved for clinical decision-making. Not approved for individual-patient diagnostic use. Outputs are population-level risk scores intended to inform pre-positioning decisions by public-health agencies. No conformity assessment under EU AI Act, EU MDR, or US FDA has yet been completed; the regulatory pathway is documented in [`docs/regulatory/`](docs/regulatory/ce-marking-and-eu-ai-act.md).
+**v0.1.0 — research preview.** Not approved for clinical decision-making. Not approved for individual-patient diagnostic use. Outputs are population-level risk scores intended to inform pre-positioning decisions by public-health agencies. No conformity assessment under EU AI Act, EU MDR, or US FDA has yet been completed; the regulatory pathway and full classification rationale are available on request to <partnerships@aqtabio.org>.
 
-**Aggregate validation pending.** The retrospective attestations for the seven anchor events distributed with this release were recorded during the v0.1.0 development cycle, not produced by a live recompute against the production atlas-tile pipeline (which begins May 2024). Pathogen-specific backtests have produced AUROC values up to 0.975 for ebola (held-out time-aware splits, see `reports/ebola/backtest_validation.json` in the closed source); a cross-pathogen aggregate AUROC, AUCPR, and lead-time distribution across the full 25-event cohort is the deliverable of the forthcoming medRxiv preprint, target Q3 2026. A focused statement of what the system can and cannot do today is at [`docs/research/known-limitations.md`](docs/research/known-limitations.md).
+**Aggregate validation pending.** The retrospective attestations for the seven anchor events distributed with this release were recorded during the v0.1.0 development cycle, not produced by a live recompute against the production atlas-tile pipeline (which begins May 2024). Pathogen-specific backtests have produced AUROC values up to 0.975 for ebola (held-out time-aware splits); a cross-pathogen aggregate AUROC, AUCPR, and lead-time distribution across the full 25-event cohort is the deliverable of the forthcoming medRxiv preprint, target Q3 2026. A focused capabilities-and-limits statement and the validation methodology are available on request.
 
-**Regulatory positioning.** AqtaBio is classified as a candidate high-risk AI system under EU AI Act (Regulation (EU) 2024/1689) Annex III §5(a) — public authorities using AI to evaluate eligibility for essential public services. The full classification rationale and a 12-month conformity roadmap aligned to ISO/IEC 42001:2023 (AI management system) is at [`docs/regulatory/ce-marking-and-eu-ai-act.md`](docs/regulatory/ce-marking-and-eu-ai-act.md).
+**Regulatory positioning.** AqtaBio is classified as a candidate high-risk AI system under EU AI Act (Regulation (EU) 2024/1689) Annex III §5(a) — public authorities using AI to evaluate eligibility for essential public services. A 12-month conformity roadmap aligned to ISO/IEC 42001:2023 (AI management system) is maintained internally and shared with pilot partners under engagement.
 
 ## What is here
 
@@ -20,8 +20,6 @@ This repository is the **public research mirror** for the AqtaBio platform built
 | [`aqta_bio/backtesting/historical_events.py`](aqta_bio/backtesting/historical_events.py) | The 25-event historical spillover cohort (2003–2024), each anchored to a publicly verifiable WHO Disease Outbreak News, ECDC weekly bulletin, or national MoH notification date. |
 | [`aqta_bio/governance/`](aqta_bio/governance/) | The 8-layer AqtaCore governance framework: data provenance, SHAP feature hash, model version pinning, staleness circuit breaker, HITL sign-off queue, RBAC, immutable audit log, bias monitoring. |
 | [`aqta_bio/model/`](aqta_bio/model/) | XGBoost + SHAP framework code and per-pathogen model cards. |
-| [`docs/research/`](docs/research/) | Methodology, validation framework, and known-limitations log. |
-| [`docs/regulatory/`](docs/regulatory/ce-marking-and-eu-ai-act.md) | EU AI Act (Regulation (EU) 2024/1689) Annex III §5(a) classification + 12-month conformity roadmap aligned to ISO/IEC 42001:2023. |
 
 ## What is **not** here
 
@@ -66,9 +64,9 @@ Apache License 2.0. See [`LICENSE`](LICENSE) for the full text. The licence appl
 - No public-health responder has yet acted on a real-time AqtaBio alert. The lead-time claim is a counterfactual against the historical record.
 - Geographic coverage is sparse at the operational tier (578 tiles seeded against an 80,000+ tile roadmap). Coverage is densest in sub-Saharan Africa, eastern Europe, and Southeast Asia.
 - No external evaluator has independently re-run the validation. Aggregate live recompute is the explicit Q3 2026 deliverable.
-- No regulatory clearance under EU AI Act, EU MDR, or US FDA. Path documented; first step is the gap analysis described in [`docs/regulatory/ce-marking-and-eu-ai-act.md`](docs/regulatory/ce-marking-and-eu-ai-act.md).
+- No regulatory clearance under EU AI Act, EU MDR, or US FDA. Pathway and 12-month conformity roadmap are maintained internally and shared with pilot partners under engagement.
 
-These are stated up front rather than buried. A focused statement of capabilities and limits is at [`docs/research/known-limitations.md`](docs/research/known-limitations.md).
+These are stated up front rather than buried. A focused statement of capabilities and limits is available on request to <partnerships@aqtabio.org>.
 
 ## Contact
 

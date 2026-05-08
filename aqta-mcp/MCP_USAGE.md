@@ -231,9 +231,9 @@ specific pathogen or the specific date; the recorded retrospective
 attestations are backtest results frozen at v0.1.0 development
 time, not live 2019 forecasts.
 
-The model's claims and limits live in
-[`docs/research/known-limitations.md`](../docs/research/known-limitations.md)
-and [`docs/research/VALIDATION_METHODOLOGY.md`](../docs/research/VALIDATION_METHODOLOGY.md).
+The model's claims and limits, and the validation methodology, are
+shared with pilot partners under engagement. Contact
+<partnerships@aqtabio.org>.
 
 The aggregate AUROC, AUCPR, and lead-time distribution across the
 full 25-event historical cohort is the deliverable of the medRxiv
