@@ -189,8 +189,9 @@ Returns per-tool pass/fail. Use as a CI heartbeat or pre-demo check.
 
 ## Connect from an MCP client
 
-Any MCP-aware client works (Claude Desktop, Prompt Opinion, your own
-Python ADK + Gemini agent, etc.). Server transport metadata:
+Any MCP-aware client works (Claude Desktop, MCP-aware clinician
+workspaces, your own Python ADK + Gemini agent, etc.). Server
+transport metadata:
 
 - **Transport**: Streamable HTTP per the MCP spec
 - **URL**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`

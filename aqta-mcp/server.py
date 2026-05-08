@@ -8,8 +8,9 @@ Pathogens: Ebola, H5N1, CCHF, West Nile, SARS-CoV-2, Mpox, Nipah, Hantavirus
 Coverage:  80,000+ geographic tiles at 25km resolution
 Model:     XGBoost + SHAP (v0.1.0)
 
-Transport: Streamable HTTP (Prompt Opinion compatible)
-Extension: ai.promptopinion/fhir-context
+Transport: Streamable HTTP
+Extension: SHARP context (FHIR context block forwarded by the calling
+           clinician workspace)
 """
 
 from __future__ import annotations
@@ -209,7 +210,11 @@ mcp = FastMCP(
     host="0.0.0.0",
 )
 
-# Declare Prompt Opinion FHIR context extension
+# Declare the SHARP FHIR-context capability extension on the MCP
+# capabilities envelope. The literal extension key below is the
+# wire-format identifier SHARP-aware clinician workspaces look for; it
+# must match the published SHARP spec verbatim and is therefore not
+# rebrandable.
 _original_get_capabilities = mcp._mcp_server.get_capabilities
 
 
@@ -1778,10 +1783,10 @@ async def submit_to_hapi_fhir(
 
 
 # ---------------------------------------------------------------------------
-# SHARP context (Prompt Opinion `ai.promptopinion/fhir-context` extension)
+# SHARP context
 # ---------------------------------------------------------------------------
-# When AqtaBio is invoked from a clinician's Prompt Opinion workspace, the
-# hosting platform propagates an EHR session as a SHARP context object:
+# When AqtaBio is invoked from a SHARP-aware clinician workspace, the hosting
+# platform propagates an EHR session as a SHARP context object:
 #
 #   {
 #     "patient_id":   "Patient/123",
@@ -1794,9 +1799,8 @@ async def submit_to_hapi_fhir(
 # as a single `sharp_context` argument so reviewers can see the bridge
 # explicitly. AqtaBio uses the patient address from the FHIR Patient
 # resource to derive the home tile, then runs population-level risk for that
-# area — no PHI is stored or returned. This is the SHARP integration the
-# Devpost "Agents Assemble" challenge calls out: agents talk, listen, and
-# carry healthcare context end-to-end without bespoke token handling.
+# area. No PHI is stored or returned. Agents talk, listen, and carry
+# healthcare context end-to-end without bespoke token handling.
 
 class _SharpContext(dict):
     """Tiny helper to access well-known keys without forcing a Pydantic model."""
@@ -1809,7 +1813,7 @@ class _SharpContext(dict):
 def _normalise_sharp(raw) -> _SharpContext:
     """
     Accept SHARP context as either:
-      (a) a dict with the fields above (Prompt Opinion canonical form)
+      (a) a dict with the fields above (canonical SHARP form)
       (b) a JSON string (some hosts pass it serialised through MCP arguments)
       (c) None / empty (tool runs without patient context, no PHI fetched)
     """
@@ -1911,14 +1915,13 @@ async def get_patient_local_risk(
     month: Optional[str] = None,
 ) -> dict:
     """
-    Patient-aware spillover risk for a clinician's Prompt Opinion workspace.
+    Patient-aware spillover risk for a SHARP-aware clinician workspace.
 
-    Reads the SHARP context (Prompt Opinion `ai.promptopinion/fhir-context`
-    extension), fetches the Patient resource from the SHARP-propagated FHIR
-    server using the SMART-on-FHIR access token, derives the patient's home
-    tile (country-coarse in v0.1.0), and returns AqtaBio's population-level
-    spillover risk for that area together with a plain-language summary
-    appropriate to share inside the encounter.
+    Reads the SHARP context block, fetches the Patient resource from the
+    SHARP-propagated FHIR server using the SMART-on-FHIR access token,
+    derives the patient's home tile (country-coarse in v0.1.0), and returns
+    AqtaBio's population-level spillover risk for that area together with a
+    plain-language summary appropriate to share inside the encounter.
 
     PHI minimisation contract:
         - The Patient resource is fetched but only `address.country` is
@@ -1931,16 +1934,16 @@ async def get_patient_local_risk(
     Args:
         sharp_context: A dict (or JSON string) carrying SHARP fields:
             patient_id, encounter_id, fhir_server, access_token. Either
-            forwarded verbatim by Prompt Opinion or supplied directly by
-            integration tests.
+            forwarded verbatim by the calling workspace or supplied
+            directly by integration tests.
         pathogen: Pathogen ID (default ebola).
         month:    YYYY-MM (default = latest).
     """
     ctx = _normalise_sharp(sharp_context)
     if not ctx.patient():
         return {
-            "error": "No SHARP context. This tool needs an EHR session — "
-                     "Prompt Opinion injects it from the clinician's workspace.",
+            "error": "No SHARP context. This tool needs an EHR session that "
+                     "the calling clinician workspace must inject.",
             "expected_context_keys": ["patient_id", "fhir_server", "access_token"],
         }
     if pathogen not in PATHOGENS:
@@ -2614,8 +2617,8 @@ async def handoff_to_triage(risk_assessment: dict) -> dict:
 # list_pathogens shipped to production because no test exercised every tool
 # end-to-end before deploy. This tool runs that check live, against the
 # deployed Lambda, and returns a structured pass/fail map. Anyone can call
-# it from the Prompt Opinion playground or via curl to verify that all 16
-# tools execute without exception under default arguments.
+# it from any MCP playground or via curl to verify that all 16 tools
+# execute without exception under default arguments.
 @mcp.tool()
 async def self_test() -> dict:
     """

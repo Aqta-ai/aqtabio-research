@@ -1,7 +1,7 @@
 """
 FastAPI entrypoint for AqtaBio Pandemic Risk MCP Server.
 
-Mounts the MCP Streamable HTTP handler for Prompt Opinion compatibility.
+Mounts the MCP Streamable HTTP handler.
   - POST /mcp           → Streamable HTTP MCP endpoint
   - GET /.well-known/agent.json  → A2A v1.0 agent card (discovery)
   - GET /healthz        → simple health check for uptime monitors
@@ -69,15 +69,16 @@ _AGENT_CARD = {
         "placement (`optimise_sentinel_placement`), pathogen-agnostic "
         "Disease X scoring, counterfactual hindcasting, live HL7 FHIR R4 "
         "round-trip submission to public HAPI (idempotent on pathogen+tile), "
-        "full SHARP context support (Prompt Opinion "
-        "`ai.promptopinion/fhir-context` extension), and a self_test tool "
+        "full SHARP context support (declares the standard "
+        "`ai.promptopinion/fhir-context` capability extension), and a "
+        "self_test tool "
         "that runs every other tool end-to-end and returns a structured "
         "pass/fail map for CI verification."
     ),
     "version": "0.1.0",
-    # Top-level url is REQUIRED by the A2A v1.0 AgentCard schema. Clients that
-    # auto-discover via /.well-known/agent.json (Prompt Opinion among them)
-    # read this field to know where to call. Omitting it makes
+    # Top-level url is REQUIRED by the A2A v1.0 AgentCard schema. Clients
+    # that auto-discover via /.well-known/agent.json read this field to
+    # know where to call. Omitting it makes
     # `jq '.url'` return null and silently breaks agent-discovery flows even
     # though the rest of the card is well-formed.
     "url": "https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp",
@@ -192,7 +193,7 @@ _AGENT_CARD = {
         },
         {
             "name": "get_patient_local_risk",
-            "description": "SHARP-aware patient-local risk. Reads the Prompt Opinion `ai.promptopinion/fhir-context` block (patient_id, fhir_server, access_token), fetches the Patient resource via SMART-on-FHIR, derives the home tile from address.country, and returns AqtaBio's population-level spillover risk for that area. PHI minimisation: only country is retained. Designed to be invoked from a clinician's Prompt Opinion workspace.",
+            "description": "SHARP-aware patient-local risk. Reads the standard `ai.promptopinion/fhir-context` capability block (patient_id, fhir_server, access_token), fetches the Patient resource via SMART-on-FHIR, derives the home tile from address.country, and returns AqtaBio's population-level spillover risk for that area. PHI minimisation: only country is retained. Designed to be invoked from a SHARP-aware clinician workspace.",
             "tags": ["sharp", "fhir", "patient-context", "smart-on-fhir"],
         },
         {
@@ -255,8 +256,8 @@ async def agent_card_alias():
 
 # ---------------------------------------------------------------------------
 # Triage specialist agent card. Second A2A endpoint in this same service so
-# a downstream Prompt Opinion or A2A peer can discover it without spinning
-# a separate deploy. Triage skills are deliberately narrow: take a Task
+# a downstream A2A peer can discover it without spinning a separate deploy.
+# Triage skills are deliberately narrow: take a Task
 # produced by the surveillance side, present it to a public health officer,
 # and (post-approval) carry it forward.
 # ---------------------------------------------------------------------------
@@ -347,11 +348,10 @@ async def info():
 # Dual MCP transport so older AND newer clients both connect:
 #
 #   POST /mcp         — Streamable HTTP (MCP 2025-03-26+, current spec).
-#                       Used by Claude Desktop, mcp-inspector, recent
-#                       Prompt Opinion versions.
+#                       Used by Claude Desktop, mcp-inspector, and recent
+#                       MCP-aware clinician workspaces.
 #   GET  /sse         — legacy SSE channel (MCP 2024-11-05 spec).
-#   POST /messages/   — legacy paired POST endpoint.
-#                       Used by older Prompt Opinion clients and any MCP
+#   POST /messages/   — legacy paired POST endpoint. Used by any MCP
 #                       integration written before the Streamable HTTP
 #                       unification.
 #

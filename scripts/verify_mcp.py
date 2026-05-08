@@ -175,7 +175,7 @@ def main() -> int:
     banner("All five checks passed")
     print("MCP server is fully operational at:")
     print(f"  {args.endpoint}")
-    print("Use this in any MCP client (Claude Desktop, Prompt Opinion, mcp-inspector)")
+    print("Use this in any MCP client (Claude Desktop, mcp-inspector, etc.)")
     print("with transport = 'Streamable HTTP'.")
     return 0
 

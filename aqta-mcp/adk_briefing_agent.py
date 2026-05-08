@@ -8,8 +8,8 @@ sentinel-placement recommendation flow for public health agencies
 The agent is the wrapper: AqtaBio is the backend. The agent contributes
 the orchestration, the Gemini reasoning, and the output shape an
 agency can hand to a director for sign-off. The MCP server is
-untouched, so the same backend serves Claude Desktop, Prompt Opinion,
-and any other MCP-aware client without modification.
+untouched, so the same backend serves Claude Desktop, MCP-aware
+clinician workspaces, and any other MCP client without modification.
 
 Run:
     pip install google-genai httpx
