@@ -1,0 +1,463 @@
+{
+  "iso_week": "2026-W19",
+  "generated_at": "2026-05-09T02:09:04Z",
+  "evaluation_window": {
+    "start": "2026-05-04",
+    "end": "2026-05-10"
+  },
+  "model": {
+    "name": "AqtaBio XGBoost ensemble",
+    "version": "v0.1.0",
+    "image_digest": "sha256:5f1e79d3d36fc66378a24c11a6261f8d8679f34005b75ae9a11463acacbfb4d9",
+    "mcp_endpoint": "https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp"
+  },
+  "method": {
+    "tile_pool": "Lambda /tiles?pathogen={p}&limit=20",
+    "selection": "highest risk_score, prefer non-saturated (p90 - p10 > 0.001)",
+    "top_n_per_pathogen": 5
+  },
+  "pathogens_covered": [
+    "ebola",
+    "h5n1",
+    "cchfv",
+    "wnv",
+    "sea-cov"
+  ],
+  "pathogens_pending_tile_seeding": [
+    "mpox",
+    "nipah",
+    "hantavirus"
+  ],
+  "tiles": [
+    {
+      "pathogen": "ebola",
+      "rank": 1,
+      "tile_id": "AF-025-10010",
+      "country_iso3": "CAF",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.999,
+      "p10": 0.999,
+      "p90": 1.0,
+      "uncertainty_band": 0.001,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "biotic_transition_index",
+        "temp_anomaly_12mo"
+      ]
+    },
+    {
+      "pathogen": "ebola",
+      "rank": 2,
+      "tile_id": "AF-025-10009",
+      "country_iso3": "COG",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.983,
+      "p10": 0.978,
+      "p90": 0.988,
+      "uncertainty_band": 0.01,
+      "top_drivers": [
+        "biotic_transition_index",
+        "distance_to_past_spillover_log",
+        "population_density_log"
+      ]
+    },
+    {
+      "pathogen": "ebola",
+      "rank": 3,
+      "tile_id": "AF-025-10007",
+      "country_iso3": "CAF",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.967,
+      "p10": 0.957,
+      "p90": 0.977,
+      "uncertainty_band": 0.02,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "conflict_density_50km",
+        "population_density_log"
+      ]
+    },
+    {
+      "pathogen": "ebola",
+      "rank": 4,
+      "tile_id": "AF-025-10018",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.732,
+      "p10": 0.651,
+      "p90": 0.812,
+      "uncertainty_band": 0.161,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "biotic_transition_index",
+        "forest_loss_3yr"
+      ]
+    },
+    {
+      "pathogen": "ebola",
+      "rank": 5,
+      "tile_id": "AF-025-10015",
+      "country_iso3": "COG",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.639,
+      "p10": 0.531,
+      "p90": 0.747,
+      "uncertainty_band": 0.216,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "forest_loss_3yr",
+        "conflict_density_50km"
+      ]
+    },
+    {
+      "pathogen": "h5n1",
+      "rank": 1,
+      "tile_id": "AF-025-10012",
+      "country_iso3": "COG",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.999,
+      "p10": 0.998,
+      "p90": 0.999,
+      "uncertainty_band": 0.001,
+      "top_drivers": [
+        "biotic_transition_index",
+        "distance_to_past_spillover_log",
+        "population_density_log"
+      ]
+    },
+    {
+      "pathogen": "h5n1",
+      "rank": 2,
+      "tile_id": "AF-025-10011",
+      "country_iso3": "GAB",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.992,
+      "p10": 0.99,
+      "p90": 0.995,
+      "uncertainty_band": 0.005,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "population_density_log",
+        "forest_loss_3yr"
+      ]
+    },
+    {
+      "pathogen": "h5n1",
+      "rank": 3,
+      "tile_id": "AF-025-10005",
+      "country_iso3": "CAF",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.956,
+      "p10": 0.943,
+      "p90": 0.969,
+      "uncertainty_band": 0.026,
+      "top_drivers": [
+        "biotic_transition_index",
+        "distance_to_past_spillover_log",
+        "population_density_log"
+      ]
+    },
+    {
+      "pathogen": "h5n1",
+      "rank": 4,
+      "tile_id": "AF-025-10002",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.889,
+      "p10": 0.856,
+      "p90": 0.923,
+      "uncertainty_band": 0.067,
+      "top_drivers": [
+        "forest_loss_3yr",
+        "distance_to_past_spillover_log",
+        "biotic_transition_index"
+      ]
+    },
+    {
+      "pathogen": "h5n1",
+      "rank": 5,
+      "tile_id": "AF-025-10016",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.692,
+      "p10": 0.6,
+      "p90": 0.784,
+      "uncertainty_band": 0.184,
+      "top_drivers": [
+        "forest_loss_3yr",
+        "distance_to_past_spillover_log",
+        "biotic_transition_index"
+      ]
+    },
+    {
+      "pathogen": "cchfv",
+      "rank": 1,
+      "tile_id": "AF-025-10007",
+      "country_iso3": "CAF",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.993,
+      "p10": 0.991,
+      "p90": 0.995,
+      "uncertainty_band": 0.004,
+      "top_drivers": [
+        "biotic_transition_index",
+        "distance_to_past_spillover_log",
+        "livestock_density_pig_log"
+      ]
+    },
+    {
+      "pathogen": "cchfv",
+      "rank": 2,
+      "tile_id": "AF-025-10012",
+      "country_iso3": "COG",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.992,
+      "p10": 0.989,
+      "p90": 0.994,
+      "uncertainty_band": 0.005,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "livestock_density_pig_log",
+        "conflict_density_50km"
+      ]
+    },
+    {
+      "pathogen": "cchfv",
+      "rank": 3,
+      "tile_id": "AF-025-10017",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.992,
+      "p10": 0.989,
+      "p90": 0.994,
+      "uncertainty_band": 0.005,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "biotic_transition_index",
+        "conflict_density_50km"
+      ]
+    },
+    {
+      "pathogen": "cchfv",
+      "rank": 4,
+      "tile_id": "AF-025-10018",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.992,
+      "p10": 0.99,
+      "p90": 0.995,
+      "uncertainty_band": 0.005,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "livestock_density_pig_log",
+        "biotic_transition_index"
+      ]
+    },
+    {
+      "pathogen": "cchfv",
+      "rank": 5,
+      "tile_id": "AF-025-10006",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.991,
+      "p10": 0.988,
+      "p90": 0.993,
+      "uncertainty_band": 0.005,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "livestock_density_pig_log",
+        "biotic_transition_index"
+      ]
+    },
+    {
+      "pathogen": "wnv",
+      "rank": 1,
+      "tile_id": "AF-025-10002",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.94,
+      "p10": 0.922,
+      "p90": 0.958,
+      "uncertainty_band": 0.036,
+      "top_drivers": [
+        "temp_anomaly_12mo",
+        "distance_to_past_spillover_log",
+        "population_density_log"
+      ]
+    },
+    {
+      "pathogen": "wnv",
+      "rank": 2,
+      "tile_id": "AF-025-10016",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.915,
+      "p10": 0.89,
+      "p90": 0.941,
+      "uncertainty_band": 0.051,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "population_density_log",
+        "rainfall_anomaly_12mo"
+      ]
+    },
+    {
+      "pathogen": "wnv",
+      "rank": 3,
+      "tile_id": "AF-025-10007",
+      "country_iso3": "CAF",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.872,
+      "p10": 0.833,
+      "p90": 0.91,
+      "uncertainty_band": 0.077,
+      "top_drivers": [
+        "rainfall_anomaly_12mo",
+        "population_density_log",
+        "temp_anomaly_12mo"
+      ]
+    },
+    {
+      "pathogen": "wnv",
+      "rank": 4,
+      "tile_id": "AF-025-10018",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.668,
+      "p10": 0.569,
+      "p90": 0.768,
+      "uncertainty_band": 0.199,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "population_density_log",
+        "forest_loss_3yr"
+      ]
+    },
+    {
+      "pathogen": "wnv",
+      "rank": 5,
+      "tile_id": "AF-025-10003",
+      "country_iso3": "CAF",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.627,
+      "p10": 0.515,
+      "p90": 0.739,
+      "uncertainty_band": 0.224,
+      "top_drivers": [
+        "population_density_log",
+        "biotic_transition_index",
+        "temp_anomaly_12mo"
+      ]
+    },
+    {
+      "pathogen": "sea-cov",
+      "rank": 1,
+      "tile_id": "AF-025-10017",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.998,
+      "p10": 0.998,
+      "p90": 0.999,
+      "uncertainty_band": 0.001,
+      "top_drivers": [
+        "biotic_transition_index",
+        "population_density_log",
+        "distance_to_past_spillover_log"
+      ]
+    },
+    {
+      "pathogen": "sea-cov",
+      "rank": 2,
+      "tile_id": "AF-025-10002",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.983,
+      "p10": 0.978,
+      "p90": 0.988,
+      "uncertainty_band": 0.01,
+      "top_drivers": [
+        "forest_loss_3yr",
+        "biotic_transition_index",
+        "distance_to_past_spillover_log"
+      ]
+    },
+    {
+      "pathogen": "sea-cov",
+      "rank": 3,
+      "tile_id": "AF-025-10006",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.957,
+      "p10": 0.944,
+      "p90": 0.97,
+      "uncertainty_band": 0.026,
+      "top_drivers": [
+        "biotic_transition_index",
+        "conflict_density_50km",
+        "distance_to_past_spillover_log"
+      ]
+    },
+    {
+      "pathogen": "sea-cov",
+      "rank": 4,
+      "tile_id": "AF-025-10005",
+      "country_iso3": "CAF",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.871,
+      "p10": 0.833,
+      "p90": 0.91,
+      "uncertainty_band": 0.077,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "biotic_transition_index",
+        "forest_loss_3yr"
+      ]
+    },
+    {
+      "pathogen": "sea-cov",
+      "rank": 5,
+      "tile_id": "AF-025-10018",
+      "country_iso3": "COD",
+      "region": "Congo Basin",
+      "month": "2026-05",
+      "risk_score": 0.681,
+      "p10": 0.585,
+      "p90": 0.777,
+      "uncertainty_band": 0.192,
+      "top_drivers": [
+        "biotic_transition_index",
+        "forest_loss_3yr",
+        "distance_to_past_spillover_log"
+      ]
+    }
+  ],
+  "honest_caveats": [
+    "Risk score is population-level for a 25 km tile, not a per-patient diagnostic.",
+    "Coverage is sparse (578 production tiles); outbreaks in unseeded tiles record as `coverage_gap`, not `miss`.",
+    "No claim that an outbreak WILL occur in the listed tiles; the commitment is that AqtaBio considered these tiles highest-risk for the named pathogen during the named window."
+  ]
+}
