@@ -204,6 +204,31 @@ in [`smoke_test_mcp_flow.py`](smoke_test_mcp_flow.py).
 
 ---
 
+## Public web surfaces consuming this MCP
+
+Two read-only web surfaces on `aqtabio.org` are powered directly by
+the tools above; useful as worked examples of how a downstream
+client shapes the responses for end users.
+
+- **Time Machine** — <https://aqtabio.org/timemachine>
+  Calls `retrospective_validation` for all eight historical anchor
+  events and renders each lead-time gap (AqtaBio threshold-crossing
+  date → publicly verifiable WHO / ECDC / national notification date)
+  as a horizontal bar on a 2013–2024 cohort timeline. JSON feed at
+  `/api/timemachine`, CDN-cached for 24h.
+
+- **Today's Disease X watch** — <https://aqtabio.org/access>
+  Live panel above the access form showing the current top seeded
+  tile per live pathogen. Calls the Lambda `/tiles?pathogen=…`
+  endpoint per pathogen, picks the highest non-saturated tile,
+  surfaces SHAP driver and confidence band per card. JSON feed at
+  `/api/disease-x-watch`, CDN-cached for 15 minutes,
+  `Access-Control-Allow-Origin: *` so the feed is safe to syndicate.
+
+Both feeds are public and unauthenticated.
+
+---
+
 ## Pathogens covered
 
 8 priority pathogens: Ebola Virus Disease, Avian Influenza H5N1,
