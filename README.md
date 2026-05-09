@@ -33,8 +33,6 @@ All endpoints are public and require no authentication. The canonical web entry 
 
 - **MCP server (programmatic)**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp` — nineteen tools including `optimise_sentinel_placement`, `retrospective_validation`, `get_risk_score`, `get_hotspots`, `generate_outbreak_briefing`, `submit_to_hapi_fhir`, `self_test`. Streamable HTTP transport (set `Accept: application/json, text/event-stream`). See [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md).
 - **A2A v1.0 agent card**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/.well-known/agent.json` — RFC 8615 well-known URI declaring capabilities and per-pathogen SNOMED CT codes.
-- **Time Machine** (web): <https://aqtabio.org/timemachine> — interactive walkthrough of the eight historical anchor events the live MCP exposes, with each anchor's lead-time gap (AqtaBio threshold-crossing date → publicly verifiable WHO/ECDC/national notification date) rendered visually. Backed by the JSON feed at `/api/timemachine`, which calls `retrospective_validation` for all eight anchors and shapes the response. CDN-cached for 24h since the anchors are frozen at the v0.1.0 model digest.
-- **Today's Disease X watch** (web): <https://aqtabio.org/access> — live panel showing the current top seeded tile per live pathogen (Ebola, H5N1, CCHF, West Nile, SARS-CoV-2). Backed by the JSON feed at `/api/disease-x-watch`, refreshed at the CDN edge every 15 minutes. Public read-only with `Access-Control-Allow-Origin: *` so the feed is safe to syndicate.
 
 ## Validation cohort
 
