@@ -84,15 +84,23 @@ def _load_all_commitments() -> list[dict]:
 
 
 def _most_recent_before(commitments: list[dict], notification_date: datetime.date) -> Optional[dict]:
+    """Find the commitment with the latest generated_at that is on or
+    before the notification date.
+
+    Filtering on generated_at (NOT evaluation_window.start) is what makes
+    the verification honest: the commitment must actually have been made
+    before the notification. Filtering on evaluation_window.start would
+    let a commitment from later that same Monday match a notification
+    earlier in the week, producing a fake negative lead time.
+    """
     candidates = []
     for c in commitments:
-        win = c.get("evaluation_window", {})
-        start_str = win.get("start")
-        if not start_str:
+        gen_str = c.get("generated_at")
+        if not gen_str:
             continue
-        start = datetime.date.fromisoformat(start_str)
-        if start <= notification_date:
-            candidates.append((start, c))
+        gen_date = datetime.date.fromisoformat(gen_str[:10])
+        if gen_date <= notification_date:
+            candidates.append((gen_date, c))
     if not candidates:
         return None
     candidates.sort(key=lambda p: p[0])

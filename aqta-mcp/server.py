@@ -1939,7 +1939,7 @@ async def get_patient_local_risk(
     if not ctx.patient():
         return {
             "error": "No SHARP context. This tool needs an EHR session — "
-                     "Prompt Opinion injects it from the clinician's workspace.",
+                     "a SHARP-aware workspace injects it from the clinician's session.",
             "expected_context_keys": ["patient_id", "fhir_server", "access_token"],
         }
     if pathogen not in PATHOGENS:
