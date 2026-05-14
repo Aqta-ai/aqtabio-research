@@ -39,12 +39,12 @@ summary of the same information.
 **Renamed** — `/auth/judge-token` and `/auth/judge-exchange` to
 `/auth/evaluator-token` and `/auth/evaluator-exchange`.
 
-  The old route names ship of "judge" framing that conflated
-  hackathon-judging with the actual user role (a public-health
-  responder evaluating predictions). The new names match the
-  dashboard's preview-access cookie naming and the public-mirror
-  README's "evaluator" terminology. Request body field on the
-  exchange endpoint renamed `judge_token` → `evaluator_token`.
+  The old "judge" route names conflated adjudication framing with
+  the actual user role (a public-health responder evaluating
+  predictions). The new names match the dashboard's preview-access
+  cookie naming and the public-mirror README's "evaluator"
+  terminology. Request body field on the exchange endpoint renamed
+  `judge_token` → `evaluator_token`.
 
   Backwards compatibility: env vars `EVALUATOR_SESSION_SECRET` and
   `EVALUATOR_ACCESS_CODE` are read first, with `JUDGE_SESSION_SECRET`
