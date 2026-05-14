@@ -3,9 +3,9 @@ Historical spillover event definitions for backtesting validation.
 
 This module defines historical spillover events used to validate AqtaBio's
 predictive capability. 26 events across multiple pathogens and regions,
-with strong EU coverage for EIT Health grant validation.
+with strong EU coverage.
 
-Original 6 events (MIT Solve demo):
+Initial anchor events:
 1. 2014 West Africa Ebola (Guinea)
 2. 2018 DRC Ebola (North Kivu)
 3. 2021 Mbandaka Ebola (DRC)
@@ -13,7 +13,7 @@ Original 6 events (MIT Solve demo):
 5. 2022 H5N1 UK (Birmingham area)
 6. 2019 Wuhan SARS-CoV-2 (China)
 
-Expanded events (Req 14.1, 14.2):
+Expanded cross-pathogen events:
 7. 2012 MERS-CoV (Saudi Arabia)
 8. 2018 Nipah (Kerala, India)
 9. 2020 Ebola (Equateur, DRC)
@@ -22,9 +22,9 @@ Expanded events (Req 14.1, 14.2):
 12. 2023 CCHFV (Iraq)
 13. 2024 H5N1 (US dairy)
 14. 2020 Rift Valley Fever (Kenya)
-15. 2022 Mpox (global — Belgium index)
+15. 2022 Mpox (global, Belgium index)
 
-EU-focused events (EIT Health):
+EU-focused events:
 16. 2018 WNV Italy (record 610 cases)
 17. 2018 WNV Greece (315 cases)
 18. 2018 WNV Romania (277 cases)
@@ -96,7 +96,7 @@ class BacktestResult:
     peak_risk_score: float = 0.0
 
 
-# Historical spillover events for MIT Solve demo validation
+# Historical spillover events for backtesting validation
 HISTORICAL_SPILLOVERS = [
     HistoricalSpillover(
         event_id="2014_west_africa_ebola",
@@ -249,7 +249,7 @@ HISTORICAL_SPILLOVERS = [
         event_name="2022 Mpox Global Outbreak",
         location_name="Brussels, Belgium (index cluster)",
     ),
-    # --- EU-focused events for EIT Health validation ---
+    # --- EU-focused events ---
     HistoricalSpillover(
         event_id="2018_wnv_italy",
         pathogen_id="wnv",
@@ -352,7 +352,7 @@ HISTORICAL_SPILLOVERS = [
     ),
 ]
 
-# Convenience: EU-only events for EIT Health grant validation
+# Convenience: EU-only events
 EU_HISTORICAL_SPILLOVERS = [
     e for e in HISTORICAL_SPILLOVERS
     if e.tile_id.startswith("EU-")
