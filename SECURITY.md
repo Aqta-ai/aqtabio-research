@@ -11,7 +11,7 @@ If you find a vulnerability in the code published in this repository (the AqtaBi
 
 We aim to acknowledge reports within 5 working days and to provide a timeline for remediation within 14 days. We do not currently run a paid bug-bounty programme; responsible disclosures will be acknowledged in release notes.
 
-If the issue concerns the **live MCP endpoint** at `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp` or the **production REST API** at `https://kfj3domgfgegnd7aqtfwpdj56y0evnyv.lambda-url.eu-west-1.on.aws`, please flag clearly so we can prioritise.
+If the issue concerns the live MCP endpoint or the production REST API, please flag clearly so we can prioritise. Endpoint addresses are shared with partners under engagement at <partnerships@aqtabio.org>.
 
 ## What's in scope of this repository
 
@@ -19,7 +19,7 @@ The code in this repository is the **public research mirror** for AqtaBio. It is
 
 - `aqta-mcp/` — Model Context Protocol server source code
 - `aqta_bio/backtesting/historical_events.py` — the 25-event historical spillover cohort
-- `aqta_bio/governance/` — the 8-layer AqtaCore governance framework
+- `aqta_bio/governance/` — the 8-layer bio-domain governance framework
 - `aqta_bio/model/` — XGBoost + SHAP framework wrapper code (per-pathogen model cards in markdown form, not the trained weights)
 - `scripts/train_disease_x.py` — training script for the dedicated Disease X classifier
 - `data/recorded-attestations.json` — citable retrospective attestations
@@ -64,4 +64,4 @@ The following components of the AqtaBio platform are **not** distributed here an
 - **Security disclosures**: <security@aqta.ai>
 - **Research and partnership inquiries**: <partnerships@aqtabio.org>
 - **General**: <hello@aqta.ai>
-- **Live MCP endpoint**: <https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp>
+- **Pilot endpoint access**: <partnerships@aqtabio.org>
