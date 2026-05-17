@@ -18,7 +18,7 @@ This repository is the **public research mirror** for the AqtaBio platform built
 |---|---|
 | [`aqta-mcp/`](aqta-mcp/) | Public MCP (Model Context Protocol) server source. **Nineteen tools** including `optimise_sentinel_placement` (active-learning surveillance recommender), `get_disease_x_risk` (pathogen-agnostic), FHIR R4 native, A2A v1.0 agent card, SNOMED CT pathogen codes. Live at `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`. Usage examples in [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md). |
 | [`aqta_bio/backtesting/historical_events.py`](aqta_bio/backtesting/historical_events.py) | The 25-event historical spillover cohort (2003–2024), each anchored to a publicly verifiable WHO Disease Outbreak News, ECDC weekly bulletin, or national MoH notification date. |
-| [`aqta_bio/governance/`](aqta_bio/governance/) | The 8-layer AqtaCore governance framework: data provenance, SHAP feature hash, model version pinning, staleness circuit breaker, HITL sign-off queue, RBAC, immutable audit log, bias monitoring. |
+| [`aqta_bio/governance/`](aqta_bio/governance/) | The 8-layer bio-domain governance gateway: data provenance, SHAP feature hash, model version pinning, 90-day data-freshness circuit breaker, HITL epidemiologist sign-off queue, RBAC, immutable audit log, bias monitoring. Specific to biosurveillance; separate codebase from the commercial Aqta runtime governance engine that lives in a different repository. |
 | [`aqta_bio/model/`](aqta_bio/model/) | XGBoost + SHAP framework code and per-pathogen model cards. |
 
 ## What is **not** here
