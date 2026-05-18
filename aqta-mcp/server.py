@@ -15,9 +15,13 @@ Extension: ai.promptopinion/fhir-context
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
+import random
+import statistics
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional
 
 import httpx
@@ -545,20 +549,271 @@ async def get_top_risk_tiles(
     data = resp.json()
 
     tiles = sorted(data.get("tiles", []), key=lambda t: t.get("risk_score", 0), reverse=True)
+
+    # Defensive filter: detect saturated reference tiles whose risk_score and
+    # uncertainty band both clip at 1.0. These are either seeded reference rows
+    # or model outputs hitting the sigmoid ceiling; either way, surfacing them
+    # at the top of the ranked feed produces misleading "everything is critical"
+    # output. Tag them so downstream callers can choose to display, filter, or
+    # warn. Set AQTA_HIDE_SATURATED_TILES=1 in env to drop them entirely from
+    # the ranked output (recommended for public-facing dashboards).
+    import os as _os
+    hide_saturated = _os.getenv("AQTA_HIDE_SATURATED_TILES", "").lower() in ("1", "true", "yes")
+
+    def _is_saturated(t: dict) -> bool:
+        score = t.get("risk_score") or 0
+        p10 = t.get("p10") or 0
+        p90 = t.get("p90") or 0
+        return score >= 0.999 and p10 >= 0.999 and p90 >= 0.999
+
+    saturated_count = sum(1 for t in tiles if _is_saturated(t))
+    if hide_saturated:
+        tiles = [t for t in tiles if not _is_saturated(t)]
+
+    top = []
+    for t in tiles[:limit]:
+        entry = {
+            "tile_id": t["tile_id"],
+            "risk_score": t.get("risk_score"),
+            "region": t.get("region"),
+            "p10": t.get("p10"),
+            "p90": t.get("p90"),
+        }
+        if _is_saturated(t):
+            entry["calibration_warning"] = (
+                "saturated_score: risk_score and uncertainty band both clip at 1.0; "
+                "likely seeded reference row or model output at sigmoid ceiling. "
+                "Verify against tile_predictions table before citing externally."
+            )
+        top.append(entry)
+
     return {
         "pathogen": pathogen,
         "month": month or "latest",
         "total_monitored": data.get("total", 0),
-        "top_tiles": [
-            {
-                "tile_id": t["tile_id"],
-                "risk_score": t.get("risk_score"),
-                "region": t.get("region"),
-                "p10": t.get("p10"),
-                "p90": t.get("p90"),
+        "saturated_tiles_detected": saturated_count,
+        "saturated_tiles_hidden": hide_saturated,
+        "top_tiles": top,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Country rankings sidecar (Tier 1 Day 6)
+# ---------------------------------------------------------------------------
+# The trained CountryClassifierModel runs OFFLINE in the bio env (which
+# already has xgboost + numpy + pandas). It writes a small JSON sidecar
+# per pathogen at COUNTRY_RANKINGS_ROOT. The MCP just reads that file
+# when serving get_top_risk_countries — no ML deps inside the
+# container, no model loading at request time.
+#
+# The sidecar path can be overridden via env var so the App Runner
+# build can mount the artefacts wherever the deploy pipeline places
+# them.
+COUNTRY_RANKINGS_ROOT = Path(
+    os.getenv("AQTA_COUNTRY_RANKINGS_ROOT", "/app/country_rankings")
+)
+
+
+def _load_country_rankings(pathogen: str, month: Optional[str]) -> Optional[dict]:
+    """Load the trained-model country rankings JSON for this pathogen.
+
+    Returns None when the file is missing OR when the requested month
+    does not match the sidecar's scoring_month (so a request for
+    2026-05 against a 2026-04 sidecar falls back to the live
+    heuristic rather than serving stale rankings as if they were
+    current).
+    """
+    path = COUNTRY_RANKINGS_ROOT / pathogen / "country_rankings.json"
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text())
+    except (OSError, ValueError) as exc:
+        logger.warning("country rankings sidecar at %s failed to parse: %s", path, exc)
+        return None
+    if payload.get("schema_version") != 1:
+        logger.warning(
+            "country rankings sidecar at %s has unsupported schema_version %s",
+            path,
+            payload.get("schema_version"),
+        )
+        return None
+    sidecar_month = payload.get("scoring_month")
+    if month is not None and sidecar_month and month != sidecar_month:
+        logger.info(
+            "country rankings sidecar for %s is for month %s; request asked for %s; "
+            "falling back to live heuristic",
+            pathogen,
+            sidecar_month,
+            month,
+        )
+        return None
+    return payload
+
+
+# ---------------------------------------------------------------------------
+# Tool 5b: Get top countries (highest aggregate risk)  [v0.2]
+# ---------------------------------------------------------------------------
+@mcp.tool()
+async def get_top_risk_countries(
+    pathogen: str = "ebola",
+    month: Optional[str] = None,
+    limit: int = 10,
+    ranking_metric: str = "mean",
+    min_tiles_per_country: int = 1,
+    drop_saturated: bool = True,
+    use_trained_classifier: bool = True,
+) -> dict:
+    """
+    Aggregate per-tile risk scores up to country level and return the top
+    countries ranked by the chosen metric.
+
+    Scoring path (Tier 1 Day 6):
+        When use_trained_classifier=True (default) and a trained
+        CountryClassifierModel artefact has been published as a JSON
+        sidecar at $AQTA_COUNTRY_RANKINGS_ROOT/<pathogen>/country_rankings.json,
+        this tool returns rankings from that model. The heuristic
+        aggregation below is used as a fallback when no sidecar exists
+        or when the requested month does not match the sidecar's
+        scoring_month. The response includes a `scoring_method` field
+        ("trained_classifier" or "heuristic_aggregation") so callers
+        can tell which path produced the rankings.
+
+    Use this when you need country-of-concern guidance (eg "where should
+    WHO Africa pre-position rapid diagnostic kits this month"), in contrast
+    to ``get_top_risk_tiles`` which returns the finest-grain hotspots and
+    can over-weight a single saturated reference tile in one country.
+
+    Args:
+        pathogen: Pathogen ID (ebola, h5n1, cchfv, wnv, sea-cov, mpox, nipah, hantavirus).
+        month: Optional YYYY-MM. Defaults to latest available.
+        limit: Number of countries to return (1 to 50).
+        ranking_metric: Heuristic-path ranking only. "mean", "max", or "p90_band".
+            Ignored when the trained classifier path serves the request.
+        min_tiles_per_country: Heuristic-path filter only.
+        drop_saturated: Heuristic-path filter only.
+        use_trained_classifier: When True (default), prefer the trained
+            CountryClassifierModel sidecar over the heuristic. Set to
+            False to force the heuristic path (eg for A/B comparison).
+
+    Returns:
+        dict with pathogen, month, scoring_method, ranking_metric, and a
+        top_countries list. The heuristic path includes
+        total_tiles_considered / saturated_tiles_dropped /
+        min_tiles_per_country diagnostics; the trained-classifier path
+        includes model_id / scored_at / max_tiles_reference.
+    """
+    valid_metrics = {"mean", "max", "p90_band"}
+    if ranking_metric not in valid_metrics:
+        raise ValueError(
+            f"ranking_metric must be one of {sorted(valid_metrics)}, got '{ranking_metric}'"
+        )
+
+    # Tier 1 Day 6 — serve trained-classifier rankings when the sidecar
+    # is present AND the requested month aligns with it. Falls through
+    # to the heuristic below for any miss case.
+    if use_trained_classifier:
+        sidecar = _load_country_rankings(pathogen, month)
+        if sidecar is not None:
+            top = sidecar.get("top_countries", [])[: max(1, min(limit, 50))]
+            return {
+                "pathogen": pathogen,
+                "month": sidecar.get("scoring_month") or (month or "latest"),
+                "scoring_method": "trained_classifier",
+                "model_id": sidecar.get("model_id"),
+                "scored_at": sidecar.get("scored_at"),
+                "max_tiles_reference": sidecar.get("max_tiles_reference"),
+                "top_countries": top,
+                "honest_caveat": sidecar.get("honest_caveat"),
             }
-            for t in tiles[:limit]
-        ],
+
+    params: dict = {"pathogen": pathogen, "limit": 1000}
+    if month:
+        params["month"] = month
+
+    resp = await _client.get("/tiles", params=params)
+    resp.raise_for_status()
+    data = resp.json()
+    tiles = data.get("tiles", [])
+
+    def _is_saturated(t: dict) -> bool:
+        score = t.get("risk_score") or 0
+        p10 = t.get("p10") or 0
+        p90 = t.get("p90") or 0
+        return score >= 0.999 and p10 >= 0.999 and p90 >= 0.999
+
+    saturated_total = sum(1 for t in tiles if _is_saturated(t))
+    if drop_saturated:
+        usable_tiles = [t for t in tiles if not _is_saturated(t)]
+    else:
+        usable_tiles = list(tiles)
+
+    by_country: dict[str, list[dict]] = {}
+    for t in usable_tiles:
+        iso3 = t.get("country_iso3")
+        if not iso3:
+            continue
+        by_country.setdefault(iso3, []).append(t)
+
+    rng = random.Random(0)  # seeded for reproducibility of the bootstrap CI
+    BOOTSTRAP_ITERS = 1000
+
+    aggregates = []
+    for iso3, country_tiles in by_country.items():
+        if len(country_tiles) < min_tiles_per_country:
+            continue
+        scores = [float(t.get("risk_score") or 0) for t in country_tiles]
+        mean_score = statistics.fmean(scores)
+        max_score = max(scores)
+        top_tile = max(country_tiles, key=lambda x: float(x.get("risk_score") or 0))
+
+        # Bootstrap the mean. With small N this is wide; that width is the
+        # correct honest signal that the country has sparse coverage.
+        boot_means = []
+        for _ in range(BOOTSTRAP_ITERS):
+            sample = [scores[rng.randrange(len(scores))] for _ in scores]
+            boot_means.append(sum(sample) / len(sample))
+        boot_means.sort()
+        ci_low = boot_means[int(0.05 * BOOTSTRAP_ITERS)]
+        ci_high = boot_means[int(0.95 * BOOTSTRAP_ITERS) - 1]
+
+        # Saturation share lets the caller see when a country was lifted by
+        # one or two clipped tiles, even if drop_saturated=False.
+        sat_in_country = sum(1 for t in country_tiles if _is_saturated(t))
+        sat_share = round(sat_in_country / len(country_tiles), 3) if country_tiles else 0.0
+
+        aggregates.append({
+            "country_iso3": iso3,
+            "mean_risk_score": round(mean_score, 3),
+            "max_risk_score": round(max_score, 3),
+            "mean_ci_p5": round(ci_low, 3),
+            "mean_ci_p95": round(ci_high, 3),
+            "tile_count": len(country_tiles),
+            "saturation_share": sat_share,
+            "top_tile": {
+                "tile_id": top_tile.get("tile_id"),
+                "risk_score": round(float(top_tile.get("risk_score") or 0), 3),
+                "region": top_tile.get("region"),
+            },
+        })
+
+    sort_key = {
+        "mean": lambda c: c["mean_risk_score"],
+        "max": lambda c: c["max_risk_score"],
+        "p90_band": lambda c: c["mean_ci_p95"],
+    }[ranking_metric]
+    aggregates.sort(key=sort_key, reverse=True)
+
+    return {
+        "pathogen": pathogen,
+        "month": month or "latest",
+        "scoring_method": "heuristic_aggregation",
+        "ranking_metric": ranking_metric,
+        "total_tiles_considered": len(usable_tiles),
+        "total_countries_seen": len(by_country),
+        "saturated_tiles_dropped": saturated_total if drop_saturated else 0,
+        "min_tiles_per_country": min_tiles_per_country,
+        "top_countries": aggregates[: max(1, min(limit, 50))],
     }
 
 
@@ -791,39 +1046,64 @@ async def explain_risk_drivers(
         )
         recommended_actions = []
     else:
+        # Wrap the Claude call with an explicit timeout so the MCP request
+        # cannot stall past the SSE keepalive ping window. If Claude fails or
+        # times out, fall back to a structured template explanation built from
+        # the SHAP drivers rather than returning "AI explanation generation
+        # failed" or letting the request hang into a heartbeat-only response.
+        import asyncio as _asyncio
         try:
-            response = await anthropic_client.messages.create(
-                model="claude-haiku-4-5-20251001",
-                max_tokens=400,
-                system=[
-                    {
-                        "type": "text",
-                        "text": _ANALYST_SYSTEM_PROMPT,
-                        "cache_control": {"type": "ephemeral"},
-                    }
-                ],
-                messages=[
-                    {
-                        "role": "user",
-                        "content": (
-                            "Write 3 short paragraphs:\n"
-                            "1. WHY this tile has elevated risk — translate the SHAP drivers into "
-                            "plain-English conditions on the ground (e.g. 'recent deforestation has ')\n"
-                            "2. What specific environmental/ecological conditions are present that "
-                            "create spillover risk for this pathogen\n"
-                            "3. Exactly 2–3 specific actions a public health officer should take "
-                            "(name the action, not generic advice)\n\n"
-                            f"DATA:\n{data_context}"
-                        ),
-                    }
-                ],
+            response = await _asyncio.wait_for(
+                anthropic_client.messages.create(
+                    model="claude-haiku-4-5-20251001",
+                    max_tokens=400,
+                    system=[
+                        {
+                            "type": "text",
+                            "text": _ANALYST_SYSTEM_PROMPT,
+                            "cache_control": {"type": "ephemeral"},
+                        }
+                    ],
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": (
+                                "Write 3 short paragraphs:\n"
+                                "1. WHY this tile has elevated risk, translate the SHAP drivers into "
+                                "plain-English conditions on the ground (e.g. 'recent deforestation has ')\n"
+                                "2. What specific environmental/ecological conditions are present that "
+                                "create spillover risk for this pathogen\n"
+                                "3. Exactly 2 to 3 specific actions a public health officer should take "
+                                "(name the action, not generic advice)\n\n"
+                                f"DATA:\n{data_context}"
+                            ),
+                        }
+                    ],
+                ),
+                timeout=20.0,
             )
             explanation = response.content[0].text
             recommended_actions = []  # Extracted from explanation prose
-        except Exception as exc:
-            logger.error("Claude API call failed: %s", exc)
-            explanation = f"AI explanation generation failed: {exc}"
-            recommended_actions = []
+        except (_asyncio.TimeoutError, Exception) as exc:
+            logger.error("Claude API call failed or timed out: %s", exc)
+            # Structured fallback: use the SHAP drivers directly so the caller
+            # gets a real explanation, not an error message.
+            top_names = [d.get("feature_name", "") for d in drivers[:3]]
+            driver_summary = ", ".join(n for n in top_names if n) or "no driver data"
+            explanation = (
+                f"Tile {tile_id} carries a {tier} risk score of {risk_score:.3f} for "
+                f"{pathogen_info['display']}. The model's top SHAP drivers are: "
+                f"{driver_summary}. These features are consistent with elevated "
+                f"environmental conditions for spillover. AI-narrative synthesis is "
+                f"temporarily unavailable; SHAP drivers and risk score are model "
+                f"outputs and remain audit-grade. Detailed driver values are in "
+                f"top_drivers below."
+            )
+            recommended_actions = [
+                "Cross-reference top SHAP drivers against the field surveillance brief for this tile.",
+                "Engage the pathogen-specific epidemiology team for verification before public alerts.",
+                "Re-query AqtaCore-signed receipts for the prediction chain underlying this score.",
+            ]
 
     return {
         "explanation": explanation,
@@ -2642,6 +2922,7 @@ async def self_test() -> dict:
         ("get_hotspots",              {"pathogen": sample_pathogen}),
         ("get_risk_trend",            {"tile_id": sample_tile_id, "pathogen": sample_pathogen}),
         ("get_top_risk_tiles",        {"pathogen": sample_pathogen, "limit": 3}),
+        ("get_top_risk_countries",    {"pathogen": sample_pathogen, "limit": 3, "min_tiles_per_country": 1}),
         ("get_system_status",         {}),
         ("retrospective_validation",  {"event_id": sample_event}),
         ("get_multi_pathogen_hotspots", {}),
