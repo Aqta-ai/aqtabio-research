@@ -1,0 +1,142 @@
+{
+  "iso_week": "2026-W21",
+  "supplement_for_pathogen": "mers-cov",
+  "supplement_version": "v0.1",
+  "generated_at": "2026-05-20T17:09:56.946847Z",
+  "evaluation_window": {
+    "start": "2026-05-25",
+    "end": "2026-05-31"
+  },
+  "model": {
+    "name": "AqtaBio MERS-CoV XGBoost (v0.1 baseline)",
+    "version": "v0.1.0",
+    "training_data": "Ramshaw, Letourneau, Pigott et al. 2019 (10.6084/m9.figshare.10009919.v3, CC BY 4.0)",
+    "n_training_positives": 59,
+    "n_training_tiles": 17316,
+    "features": [
+      "hajj_proximity_km",
+      "camel_density_log",
+      "distance_to_past_spillover_log",
+      "abs_latitude"
+    ],
+    "feature_importances": {
+      "hajj_proximity_km": 0.01731598749756813,
+      "camel_density_log": 0.09644822776317596,
+      "distance_to_past_spillover_log": 0.8529873490333557,
+      "abs_latitude": 0.03324839472770691
+    },
+    "validation": {
+      "protocol": "5-fold random CV (matches Sikkema 2022)",
+      "auc_mean": 0.8773,
+      "auc_std": 0.0694,
+      "auc_per_fold": [
+        0.7809,
+        0.9423,
+        0.9422,
+        0.9144,
+        0.8069
+      ],
+      "pr_auc_mean": 0.1414,
+      "brier_mean": 0.0037
+    },
+    "sota_comparison": {
+      "reference": "Zhang et al. 2022, Ecology of MERS-CoV (PMC9526759, AUC 0.917, 34 features)",
+      "our_auc": 0.8773,
+      "delta": 0.0397,
+      "feature_gap": "ESA WorldCover bareland/forest/cropland, ERA5 temperature, WorldPop pop density, SRTM elevation"
+    }
+  },
+  "honesty_notes": [
+    "v0.1 ships before FII Innovators deadline 2026-05-28 with 4 laptop-feasible features (out of 9 in the pathogen config). The remaining 5 features need ERA5 + ESA WorldCover + WorldPop + SRTM which require AWS Batch or Google Earth Engine compute.",
+    "AUC 0.8773 is the floor, not the ceiling. v0.2 with the full feature stack targets >=0.90 by FII stage event October 2026.",
+    "Tile-id format AT_arabian_peninsula_{col}_{row} differs from the production AF-025-N format used by other pathogens; reconciliation is part of v0.2 tile-seeding.",
+    "distance_to_past_spillover_log feature carries 85 percent of model importance; this feature is computed fold-aware in cross-validation but is still partially tautological. Replace with non-tautological environmental features in v0.2."
+  ],
+  "method": {
+    "tile_pool": "aqta_bio.model.train_mers_cov_v0_1 on Arabian Peninsula 25km grid (~17k tiles)",
+    "selection": "highest risk_score from XGBoost trained on full Ramshaw-Pigott 2019 ground truth",
+    "top_n": 5
+  },
+  "tiles": [
+    {
+      "pathogen": "mers-cov",
+      "rank": 1,
+      "tile_id": "AT_arabian_peninsula_90_62",
+      "country_iso3": "SAU",
+      "region": "Najd (central KSA)",
+      "centroid_lat": 24.0766,
+      "centroid_lon": 45.3829,
+      "month": "2026-05",
+      "risk_score": 1.0,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "camel_density_log",
+        "hajj_proximity_km"
+      ]
+    },
+    {
+      "pathogen": "mers-cov",
+      "rank": 2,
+      "tile_id": "AT_arabian_peninsula_136_62",
+      "country_iso3": "ARE",
+      "region": "Abu Dhabi/Dubai",
+      "centroid_lat": 24.0766,
+      "centroid_lon": 55.7432,
+      "month": "2026-05",
+      "risk_score": 1.0,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "camel_density_log",
+        "hajj_proximity_km"
+      ]
+    },
+    {
+      "pathogen": "mers-cov",
+      "rank": 3,
+      "tile_id": "AT_arabian_peninsula_131_63",
+      "country_iso3": "SAU",
+      "region": "Najd (central KSA)",
+      "centroid_lat": 24.3018,
+      "centroid_lon": 54.6171,
+      "month": "2026-05",
+      "risk_score": 0.9999,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "camel_density_log",
+        "hajj_proximity_km"
+      ]
+    },
+    {
+      "pathogen": "mers-cov",
+      "rank": 4,
+      "tile_id": "AT_arabian_peninsula_85_33",
+      "country_iso3": "SAU",
+      "region": "Asir/Tihama",
+      "centroid_lat": 17.545,
+      "centroid_lon": 44.2568,
+      "month": "2026-05",
+      "risk_score": 0.9999,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "camel_density_log",
+        "hajj_proximity_km"
+      ]
+    },
+    {
+      "pathogen": "mers-cov",
+      "rank": 5,
+      "tile_id": "AT_arabian_peninsula_68_50",
+      "country_iso3": "SAU",
+      "region": "Asir/Tihama",
+      "centroid_lat": 21.3739,
+      "centroid_lon": 40.4279,
+      "month": "2026-05",
+      "risk_score": 0.9999,
+      "top_drivers": [
+        "distance_to_past_spillover_log",
+        "camel_density_log",
+        "hajj_proximity_km"
+      ]
+    }
+  ]
+}
