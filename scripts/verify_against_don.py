@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-verify_against_don.py — match a WHO Disease Outbreak News (or any
+verify_against_don.py - match a WHO Disease Outbreak News (or any
 public outbreak notification) against AqtaBio's prior public
 commitment for the affected tile.
 
@@ -28,7 +28,7 @@ Given an outbreak notification:
      `AF-025-10010` (Africa, 25 km grid, index 10010).
   2. Note the public-notification date (the WHO DON publish date,
      the ECDC weekly bulletin date, or the national MoH
-     declaration date — whichever is publicly verifiable and
+     declaration date - whichever is publicly verifiable and
      earliest).
   3. Run this script with the tile-id, pathogen-id, and
      notification date.

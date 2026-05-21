@@ -4,7 +4,7 @@ End-to-end smoke test for the AqtaBio MCP backend.
 
 Exercises the call sequence the ADK + Gemini wrapper agent issues
 when answering an Africa CDC sentinel-placement question. Runs
-against the live MCP endpoint without requiring a Gemini API key —
+against the live MCP endpoint without requiring a Gemini API key  - 
 the MCP-side path only.
 
 Usage:
@@ -15,12 +15,12 @@ Exit codes:
     1  any step failed (test will print which one)
 
 Steps validated:
-    1. tools/list                — confirms 19 tools live, including
+    1. tools/list                - confirms 19 tools live, including
                                    optimise_sentinel_placement
-    2. optimise_sentinel_placement — returns ranked deployment plan
-    3. get_risk_score (fhir=true)  — top pick yields valid FHIR R4
+    2. optimise_sentinel_placement - returns ranked deployment plan
+    3. get_risk_score (fhir=true)  - top pick yields valid FHIR R4
                                      RiskAssessment
-    4. submit_to_hapi_fhir         — round-trips a real FHIR resource
+    4. submit_to_hapi_fhir         - round-trips a real FHIR resource
                                      against the public HAPI test
                                      server (HTTP 201 on success,
                                      HTTP 200 on idempotent re-submit)
@@ -87,7 +87,7 @@ def main() -> int:
     missing = required - set(names)
     if missing:
         fail(1, f"required tools missing from deployed MCP: {missing}")
-    print("    PASS — all required tools present")
+    print("    PASS - all required tools present")
 
     # Step 2: active-learning recommender
     t0 = time.monotonic()
@@ -175,7 +175,7 @@ def main() -> int:
     print("    PASS")
 
     print("\n" + "=" * 70)
-    print("ALL FOUR STEPS PASSED — backend is operational")
+    print("ALL FOUR STEPS PASSED - backend is operational")
     print("=" * 70)
     print(
         f"\nLive verification:\n"

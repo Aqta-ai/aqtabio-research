@@ -1,4 +1,4 @@
-# `data/` — citable data artefacts
+# `data/` - citable data artefacts
 
 Static data files that document AqtaBio's recorded outputs in a form a
 reviewer or downstream agent can `curl`, parse, and cite without running
@@ -11,22 +11,22 @@ the live MCP server.
 The seven anchor events surfaced by the live MCP tool
 [`retrospective_validation`](../aqta-mcp/server.py). Each entry contains:
 
-- `event_name` — display name
-- `pathogen` / `pathogen_display` — pathogen ID and human-readable name
-- `location` — text location and `tile_id` (the 25 km tile the model scored)
-- `threshold_crossed_date` / `threshold_crossed_score` — the date the
+- `event_name` - display name
+- `pathogen` / `pathogen_display` - pathogen ID and human-readable name
+- `location` - text location and `tile_id` (the 25 km tile the model scored)
+- `threshold_crossed_date` / `threshold_crossed_score` - the date the
   recorded attestation crossed the 0.72 alert threshold and the score at
   that point
-- `official_notification` — the corresponding source-of-truth notification
+- `official_notification` - the corresponding source-of-truth notification
   (WHO Disease Outbreak News, ECDC weekly bulletin, national MoH record)
-- `pheic_declaration` — present where applicable (COVID-19, Mpox)
-- `lead_time_days` — calculated lead time = `(notification_date − threshold_date)`
-- `top_drivers` — the top SHAP feature names attributed for that event
+- `pheic_declaration` - present where applicable (COVID-19, Mpox)
+- `lead_time_days` - calculated lead time = `(notification_date − threshold_date)`
+- `top_drivers` - the top SHAP feature names attributed for that event
 
 ### Important provenance note
 
 These attestations are **frozen at the v0.1.0 development cycle**. They are
-**not** a live model recompute against archival features — the historical
+**not** a live model recompute against archival features - the historical
 feature pipeline (ERA5 archive, Hansen yearly forest-loss, WorldPop yearly,
 FAO GLW4, etc.) for these specific tiles has not yet been ingested into
 the production atlas, which begins May 2024. The independently auditable

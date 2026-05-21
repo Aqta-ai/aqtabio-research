@@ -1,4 +1,4 @@
-"""M3 — XGBoost primary model for zoonotic spillover risk with quantile regression."""
+"""M3 - XGBoost primary model for zoonotic spillover risk with quantile regression."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ def train_xgboost(
     eval_set: tuple[pd.DataFrame, pd.Series] | None = None,
 ) -> tuple[xgb.XGBClassifier, dict]:
     """
-    Train M3 — XGBoost primary model.
+    Train M3 - XGBoost primary model.
 
     Args:
         train_df: DataFrame containing feature_columns plus a "label" column.
@@ -40,8 +40,8 @@ def train_xgboost(
 
     Returns:
         Tuple of (model, training_report) where training_report has:
-            - "best_iteration": int — best boosting round (if early stopping used).
-            - "best_score": float — best validation score (if early stopping used).
+            - "best_iteration": int - best boosting round (if early stopping used).
+            - "best_score": float - best validation score (if early stopping used).
             - "feature_importance": dict mapping feature_name -> importance_score (sorted desc).
             - "top_5": list of (feature_name, score) for the top 5 features.
     """

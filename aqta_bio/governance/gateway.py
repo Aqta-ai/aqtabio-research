@@ -200,7 +200,7 @@ class GovernanceGateway:
             ...     raise_on_mismatch=True
             ... )
         """
-        # Load model from MLflow (lazy import — keeps Lambda cold start fast)
+        # Load model from MLflow (lazy import - keeps Lambda cold start fast)
         import mlflow
         import mlflow.sklearn
         import mlflow.xgboost
@@ -246,7 +246,7 @@ class GovernanceGateway:
         This method implements Requirement 6.3:
         "WHILE a Tile's underlying feature data is older than 90 days,
         THE Governance_Gateway SHALL flag that Tile's predictions with a
-        'Data Stale — do not use for decisions' warning via the Circuit_Breaker."
+        'Data Stale - do not use for decisions' warning via the Circuit_Breaker."
         
         Args:
             tile_id: Tile identifier
@@ -273,7 +273,7 @@ class GovernanceGateway:
         
         if age_days > staleness_threshold_days:
             warning = (
-                f"Data Stale — do not use for decisions. "
+                f"Data Stale - do not use for decisions. "
                 f"Feature data for tile {tile_id} is {age_days} days old "
                 f"(threshold: {staleness_threshold_days} days). "
                 f"Last updated: {feature_freshness.strftime('%Y-%m-%d')}"

@@ -1,4 +1,4 @@
-# AqtaBio MCP — usage guide
+# AqtaBio MCP - usage guide
 
 Live endpoint: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`
 

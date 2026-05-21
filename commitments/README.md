@@ -38,7 +38,7 @@ bulletin, or national MoH:
    - If present: the lead time is `notification_date - generated_at`.
      Risk score and confidence band are in the entry.
    - If absent: the commitment did not include this tile for that
-     pathogen — record the miss.
+     pathogen - record the miss.
 
 The verification script at
 [`scripts/verify_against_don.py`](../scripts/verify_against_don.py)
@@ -74,7 +74,7 @@ date, and it returns the relevant commitment entry (or none).
   per-patient diagnostic and not a forecast of when or by which
   pathogen an outbreak will occur.
 - A high-risk commitment that is followed by no outbreak is not a
-  false positive in the conventional ML sense — environmental
+  false positive in the conventional ML sense - environmental
   conditions favouring spillover are necessary but not sufficient.
   The ledger surfaces these as `no_event_observed` for the
   evaluation window; they are the basis for the prevented
@@ -87,5 +87,5 @@ is the deliverable of the forthcoming medRxiv preprint (target Q3
 2026). This ledger is the prospective complement: it builds, week
 by week, a public record that no model architecture choice or
 training-time decision can retroactively influence. The two
-together — backtest plus prospective track record — are the
+together - backtest plus prospective track record - are the
 evidence base AqtaBio expects to be evaluated against.

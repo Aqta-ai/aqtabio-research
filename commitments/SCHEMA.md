@@ -64,7 +64,7 @@
   onset is unavailable).
 - **`model.image_digest`**: the App Runner ECR image digest at the
   moment of generation. A subsequent model update does not
-  invalidate prior commitments — they were made by the model that
+  invalidate prior commitments - they were made by the model that
   was live then.
 - **`tiles[].rank`**: 1-indexed within the pathogen group; rank 1
   is the highest-risk tile for that pathogen.

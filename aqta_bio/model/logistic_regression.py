@@ -1,4 +1,4 @@
-"""M1 — Logistic Regression baseline model for zoonotic spillover risk."""
+"""M1 - Logistic Regression baseline model for zoonotic spillover risk."""
 
 from __future__ import annotations
 
@@ -46,7 +46,7 @@ def train_logistic_regression(
     C: float = 0.1,
     max_iter: int = 500,
 ) -> tuple[LogisticRegression, StandardScaler, dict]:
-    """Train M1 — Logistic Regression baseline.
+    """Train M1 - Logistic Regression baseline.
 
     Scales features with StandardScaler, trains a balanced logistic regression,
     and performs a coefficient sign check against biological expectations.
@@ -60,7 +60,7 @@ def train_logistic_regression(
 
     Returns:
         A tuple of (model, scaler, sign_check_report) where sign_check_report has:
-            - "passed": bool — True if all coefficient signs match EXPECTED_SIGNS.
+            - "passed": bool - True if all coefficient signs match EXPECTED_SIGNS.
             - "violations": list of dicts with keys "feature", "expected", "actual".
     """
     X = train_df[feature_columns].to_numpy()

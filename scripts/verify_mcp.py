@@ -3,7 +3,7 @@
 Verify the AqtaBio MCP server end-to-end without a browser.
 
 Performs a real MCP handshake against the production endpoint, lists the
-advertised tools, and calls three of them — including the Disease X tool.
+advertised tools, and calls three of them - including the Disease X tool.
 Prints results as humans would expect to see them in a demo.
 
 Usage:
@@ -106,7 +106,7 @@ def main() -> int:
         desc = t.get("description", "").strip().split("\n")[0][:80]
         print(f"    • {t['name']:<32} {desc}")
 
-    # 3. call get_disease_x_risk — the headline Disease X tool
+    # 3. call get_disease_x_risk - the headline Disease X tool
     banner("3. Disease X tool call (the new pathogen-agnostic one)")
     d = post(args.endpoint, {
         "jsonrpc": "2.0",
@@ -130,7 +130,7 @@ def main() -> int:
     for c in payload.get("top_contributing_pathogens", [])[:3]:
         print(f"    {c['pathogen_display']:<32} {c['score']}")
 
-    # 4. call retrospective_validation — the recorded retrospective for Wuhan
+    # 4. call retrospective_validation - the recorded retrospective for Wuhan
     banner("4. Wuhan retrospective tool call (recorded attestation)")
     d = post(args.endpoint, {
         "jsonrpc": "2.0",
@@ -149,7 +149,7 @@ def main() -> int:
     print(f"  WHO notified   : {payload['ground_truth']['official_notification_date']}")
     print(f"  lead time      : {payload['validation']['lead_time_days']} days")
 
-    # 5. call get_risk_score with FHIR — the demo's hero shot
+    # 5. call get_risk_score with FHIR - the demo's hero shot
     banner("5. FHIR R4 RiskAssessment (the demo's standards-compliance moment)")
     d = post(args.endpoint, {
         "jsonrpc": "2.0",

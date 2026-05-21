@@ -1,4 +1,4 @@
-"""M2 — Random Forest model for zoonotic spillover risk."""
+"""M2 - Random Forest model for zoonotic spillover risk."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ def train_random_forest(
     random_state: int = 42,
 ) -> tuple[RandomForestClassifier, dict]:
     """
-    Train M2 — Random Forest.
+    Train M2 - Random Forest.
 
     Args:
         train_df: DataFrame containing feature_columns plus a "label" column.

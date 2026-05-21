@@ -52,7 +52,7 @@ PATHOGENS = {
     "hantavirus": {"display": "Hantavirus", "snomed": "16541001", "region": "Americas (Andes / Sin Nombre), global"},
 }
 
-# System prompt for the Claude analyst — cached to minimise latency and cost.
+# System prompt for the Claude analyst - cached to minimise latency and cost.
 _ANALYST_SYSTEM_PROMPT = """You are AqtaBio's pandemic intelligence analyst. You translate XGBoost + SHAP \
 risk scores from the pre-etiologic spillover early warning system into concise, actionable public \
 health intelligence for senior officials at WHO, CDC, ECDC, APSED, GOARN, national PHOs, and \
@@ -76,42 +76,42 @@ Risk tiers (do not deviate from these labels):
 
 PER-PATHOGEN PROFILES (use these to ground recommendations):
 
-Ebola Virus Disease (SNOMED 37109004) — central/west African forest belt. \
+Ebola Virus Disease (SNOMED 37109004) - central/west African forest belt. \
 Primary drivers: deforestation_rate, deforestation_proximity, bushmeat_market_density, \
 funeral_practice_index, cave_proximity (Marburg analog), wildlife_corridor_overlap. \
 Recommended partners: WHO GOARN West Africa coordinator, national MoH, MSF, Africa CDC. \
 Typical actions: pre-position rapid diagnostic kits, train safe-burial teams, screen at \
 border crossings, alert tertiary referral hospitals.
 
-Avian Influenza H5N1 (SNOMED 396425006) — global; current concern for the 2024 dairy-cattle \
+Avian Influenza H5N1 (SNOMED 396425006) - global; current concern for the 2024 dairy-cattle \
 spillover and Hajj/Umrah mass-gathering exposure. Primary drivers: poultry_density_log, \
 bird_flyway_overlap, wetland_coverage_pct, market_density (live-bird), temperature_anomaly. \
 Recommended partners: WHO APSED for SE Asia, ECDC, FAO, OIE, Saudi MoH for pilgrimage windows. \
 Typical actions: enhanced poultry surveillance, antiviral stockpile review, livestock vet \
 training, wastewater sentinel sampling at major airports.
 
-Crimean-Congo Haemorrhagic Fever (SNOMED 19065005) — Eastern Europe, Middle East, Central Asia. \
+Crimean-Congo Haemorrhagic Fever (SNOMED 19065005) - Eastern Europe, Middle East, Central Asia. \
 Climate-driven northward expansion. Primary drivers: tick_habitat_suitability, \
 livestock_grazing_density_log, climate_anomaly_tick_expansion, livestock_density. \
 Recommended partners: ECDC, WHO Europe, Turkish MoH, Iranian CDC, Saudi MoH. Typical actions: \
 issue tick-bite advisories to abattoir workers, ribavirin stockpile, community education \
 in endemic provinces, livestock movement controls.
 
-West Nile Virus (SNOMED 417093003) — Southern/Eastern Europe, Mediterranean, parts of MENA. \
+West Nile Virus (SNOMED 417093003) - Southern/Eastern Europe, Mediterranean, parts of MENA. \
 Highly seasonal (Jul–Oct peak). Primary drivers: mosquito_habitat_suitability, \
 wetland_stagnant_water_pct, bird_staging_overlap, temperature_anomaly, precipitation_anomaly. \
 Recommended partners: ECDC vector-borne unit, Italian Istituto Superiore di Sanità, regional \
 mosquito-control authorities. Typical actions: blood-supply screening, larvicide pre-season \
 treatment, equine surveillance, public messaging on personal protection.
 
-SARS-CoV-2 / Novel Coronaviruses (SNOMED 840539006) — global, with Southeast Asia as the \
+SARS-CoV-2 / Novel Coronaviruses (SNOMED 840539006) - global, with Southeast Asia as the \
 primary novel-spillover focus. Primary drivers: wet_market_density, wildlife_corridor_overlap, \
 human_population_density, bat_intermediate_host_overlap, temperature_anomaly. Recommended \
 partners: WHO, national CDCs, university virology centres. Typical actions: wastewater \
 sentinel surveillance, wildlife-trade monitoring at high-overlap markets, hospital-based \
 ILI/SARI sentinel network expansion.
 
-Mpox / Monkeypox (SNOMED 50811000) — central/west Africa Clade Ib emergence zone, with \
+Mpox / Monkeypox (SNOMED 50811000) - central/west Africa Clade Ib emergence zone, with \
 travel-driven secondary clusters in Europe (the 2022 global outbreak) and risk to GCC \
 pilgrimage windows. Primary drivers: rodent_host_overlap, urban_deforestation_interface, \
 sexual_network_density, healthcare_access_index, prior_outbreak_proximity_days. Recommended \
@@ -119,7 +119,7 @@ partners: WHO, Africa CDC, ECDC, Saudi MoH for Hajj/Umrah, national STI clinics.
 actions: smallpox vaccine deployment, travel-health alerts, MSM-community-engaged messaging, \
 contact-tracing capacity surge.
 
-Nipah Virus (SNOMED 27332006) — South and Southeast Asia. Henipavirus family — the canonical \
+Nipah Virus (SNOMED 27332006) - South and Southeast Asia. Henipavirus family - the canonical \
 WHO R&D Blueprint "Disease X" candidate; ~40-75% case-fatality and no licensed vaccine. \
 Bangladesh sees near-annual seasonal spillovers via Pteropus medius bats contaminating \
 date-palm sap; Malaysia/Singapore 1998-99 outbreak via pig amplification; periodic clusters \
@@ -135,7 +135,7 @@ operationally-relevant strains: Sin Nombre (Americas, Peromyscus deer mouse, HPS
 (Patagonia, Oligoryzomys long-tailed pygmy rice rat, HPS, person-to-person documented); \
 Seoul (global, Rattus norvegicus, urban / port translocation); Puumala (Europe, Myodes \
 glareolus bank vole, HFRS); Hantaan (East Asia, Apodemus agrarius, HFRS). Spillover risk \
-tracks ENSO-driven rodent population booms ("trophic cascade" — wet El Niño → vegetation \
+tracks ENSO-driven rodent population booms ("trophic cascade" - wet El Niño → vegetation \
 flush → rodent boom → 6-12 month lagged human cases, classically the 1993 4-Corners HPS \
 outbreak in the US southwest). Primary drivers: rodent_density_index, rainfall_anomaly_12mo, \
 peridomestic_shelter_density, port_proximity_log, el_nino_anomaly. Recommended partners: \
@@ -146,7 +146,7 @@ rodent surveillance in maritime corridors (the May 2026 South Atlantic cruise ou
 WHO-confirmed 2026-05-06 with 8 cases and 3 lab-confirmed Andes strain, motivated this \
 exact monitoring step).
 
-SHAP DRIVER GLOSSARY — translate to plain English in every output:
+SHAP DRIVER GLOSSARY - translate to plain English in every output:
 - deforestation_rate: recent forest loss expanding bat/wildlife–human interface.
 - deforestation_proximity: cleared land within 15 km of population centres.
 - livestock_density: high density amplifying spillover at the animal–human boundary.
@@ -166,7 +166,7 @@ late case presentation, not lower spillover risk.
 
 OUTPUT TEMPLATE for `generate_outbreak_briefing` and similar narrative tools:
 
-  # SITUATIONAL BRIEF: {PATHOGEN DISPLAY NAME} — {REGION}
+  # SITUATIONAL BRIEF: {PATHOGEN DISPLAY NAME} - {REGION}
   **Classification: {RISK TIER} ALERT**
 
   ## CURRENT RISK PICTURE
@@ -241,7 +241,7 @@ def _get_anthropic():
             import anthropic
             _anthropic_client = anthropic.AsyncAnthropic(api_key=api_key)
         except ImportError:
-            logger.warning("anthropic package not installed — AI narrative tools will degrade gracefully")
+            logger.warning("anthropic package not installed - AI narrative tools will degrade gracefully")
             return None
     return _anthropic_client
 
@@ -488,7 +488,7 @@ async def get_risk_trend(
         data = resp.json()
     except httpx.HTTPStatusError as e:
         # 404 from /tiles/{id}/trend means "no trajectory rows for this
-        # tile × pathogen pair" — a normal not-applicable case (e.g.
+        # tile × pathogen pair" - a normal not-applicable case (e.g.
         # querying ebola on the Wuhan tile). Return an empty trajectory
         # so agentic callers can route gracefully without erroring the
         # conversation. Other status codes still surface as errors.
@@ -500,7 +500,7 @@ async def get_risk_trend(
                 "note": (
                     f"No trajectory data for tile {tile_id} × pathogen "
                     f"{pathogen}. Tile may be valid for a different "
-                    "pathogen — try get_top_risk_tiles() for valid IDs."
+                    "pathogen - try get_top_risk_tiles() for valid IDs."
                 ),
             }
         return {
@@ -603,7 +603,7 @@ async def get_top_risk_tiles(
 # The trained CountryClassifierModel runs OFFLINE in the bio env (which
 # already has xgboost + numpy + pandas). It writes a small JSON sidecar
 # per pathogen at COUNTRY_RANKINGS_ROOT. The MCP just reads that file
-# when serving get_top_risk_countries — no ML deps inside the
+# when serving get_top_risk_countries - no ML deps inside the
 # container, no model loading at request time.
 #
 # The sidecar path can be overridden via env var so the App Runner
@@ -709,7 +709,7 @@ async def get_top_risk_countries(
             f"ranking_metric must be one of {sorted(valid_metrics)}, got '{ranking_metric}'"
         )
 
-    # Tier 1 Day 6 — serve trained-classifier rankings when the sidecar
+    # Tier 1 Day 6 - serve trained-classifier rankings when the sidecar
     # is present AND the requested month aligns with it. Falls through
     # to the heuristic below for any miss case.
     if use_trained_classifier:
@@ -840,7 +840,7 @@ async def generate_outbreak_briefing(
     Generate an AI-powered situational brief for public health officers.
 
     Fetches current hotspot data and top-risk tiles, then uses Claude AI to
-    synthesise them into a concise, actionable intelligence report — translating
+    synthesise them into a concise, actionable intelligence report - translating
     raw XGBoost risk scores into narrative guidance a PHO can act on immediately.
 
     This is the "Last Mile" tool: raw ML numbers become specific recommendations
@@ -904,13 +904,13 @@ async def generate_outbreak_briefing(
     anthropic_client = _get_anthropic()
     if anthropic_client is None:
         briefing = (
-            f"**{pathogen_info['display']} Situational Brief** — {month or 'latest'}\n\n"
+            f"**{pathogen_info['display']} Situational Brief** - {month or 'latest'}\n\n"
             f"Risk level: **{risk_level.upper()}**. "
             f"{hotspot_data.get('total_hotspots', 0)} tiles exceed threshold "
             f"({hotspot_data.get('critical', 0)} critical, "
             f"{hotspot_data.get('high', 0)} high, "
             f"{hotspot_data.get('moderate', 0)} moderate).\n\n"
-            f"_AI narrative unavailable — set ANTHROPIC_API_KEY for full briefings._"
+            f"_AI narrative unavailable - set ANTHROPIC_API_KEY for full briefings._"
         )
     else:
         try:
@@ -977,7 +977,7 @@ async def explain_risk_drivers(
     Get a plain-English explanation of WHY a tile has elevated spillover risk.
 
     Fetches the SHAP feature importance values for the tile and uses Claude AI
-    to translate them into a causal narrative — explaining which environmental,
+    to translate them into a causal narrative - explaining which environmental,
     ecological, and epidemiological conditions are driving the score, and what
     specific actions a public health officer should consider.
 
@@ -1135,7 +1135,7 @@ async def retrospective_validation(
     source-of-truth notification date.
 
     Provenance: this tool returns a frozen attestation from the v0.1.0 development
-    cycle. It is NOT a live model recomputation — the seven anchor events listed
+    cycle. It is NOT a live model recomputation - the seven anchor events listed
     here pre-date the production atlas-tile coverage (which begins May 2024), so
     a live retrospective recompute is not yet feasible against the production
     database. Aggregate validation across the 25-event historical cohort and a
@@ -1143,7 +1143,7 @@ async def retrospective_validation(
 
     What is verifiable from this tool:
         - The official notification dates (WHO Disease Outbreak News, ECDC weekly
-          bulletins, national MoH bulletins) — independently auditable.
+          bulletins, national MoH bulletins) - independently auditable.
         - The recorded model score and threshold-crossing date for each event,
           as captured at v0.1.0.
 
@@ -1167,7 +1167,7 @@ async def retrospective_validation(
         Some entries (Marburg 2023, Lassa, Nipah, MERS-CoV, Mpox 2022)
         are held-out historical anchors used to characterise the model. These
         pathogens may not be exposed to live scoring via `get_risk_score` or
-        `get_hotspots` in the current v0.1.0 build — see `list_pathogens()` for
+        `get_hotspots` in the current v0.1.0 build - see `list_pathogens()` for
         the canonical operational + pilot list. The asymmetry is intentional.
     """
     # Ground truth from aqta_bio.backtesting.historical_events (25 validated events)
@@ -1293,7 +1293,7 @@ async def retrospective_validation(
             "interpretation": (
                 f"AqtaBio flagged elevated spillover risk on {event['threshold_crossed_date']} "
                 f"(score {event['threshold_crossed_score']}, above 0.72 alert threshold). "
-                f"This was {event['lead_time_days']} days before official notification — "
+                f"This was {event['lead_time_days']} days before official notification - "
                 "a lead time window in which pre-positioning response assets, activating "
                 "regional surveillance, and alerting partners would have been possible."
             ),
@@ -1352,7 +1352,7 @@ async def get_multi_pathogen_hotspots(
     month: Optional[str] = None,
 ) -> dict:
     """
-    Detect "threat multiplier" conditions — regions or time windows where
+    Detect "threat multiplier" conditions - regions or time windows where
     multiple pathogens are simultaneously in elevated/critical state.
 
     Syndemic detection is beyond single-pathogen surveillance. When three
@@ -1361,7 +1361,7 @@ async def get_multi_pathogen_hotspots(
     This tool flags that pattern early.
 
     Args:
-        pathogens: List of pathogen IDs (default: all operational — ebola, h5n1,
+        pathogens: List of pathogen IDs (default: all operational - ebola, h5n1,
                    cchfv, wnv, sea-cov).
         month: Optional month (YYYY-MM). Defaults to latest available.
 
@@ -1369,7 +1369,7 @@ async def get_multi_pathogen_hotspots(
         Per-pathogen severity + overall threat level + operational narrative.
     """
     if not pathogens:
-        # All 8 zoonotic pathogens — derived from the canonical PATHOGENS
+        # All 8 zoonotic pathogens - derived from the canonical PATHOGENS
         # registry rather than hardcoded so adding a pathogen propagates
         # automatically. (MenB lives on a separate feature schema and is
         # excluded from cross-zoonotic syndemic detection.)
@@ -1381,7 +1381,7 @@ async def get_multi_pathogen_hotspots(
 
     # Sequential fetch with per-call timeout. Previously this fanned out 5
     # concurrent calls via asyncio.gather, which on App Runner cold-start
-    # occasionally dropped one request — leaving a pathogen mis-classified
+    # occasionally dropped one request - leaving a pathogen mis-classified
     # as "baseline" and the overall threat level under-reported. The
     # syndemic-detection demo beat must be deterministic, so we accept the
     # extra ~3s of worst-case latency to eliminate the drop.
@@ -1482,9 +1482,9 @@ async def generate_fhir_bundle_for_pho(
     FHIR-compliant EMR, PHO surveillance system, or WHO GOARN endpoint.
 
     Bundles three resources into one atomic transaction:
-      - RiskAssessment  — per-tile probability with SHAP drivers as basis
-      - DetectedIssue   — regional hotspot alert with severity breakdown
-      - Observation(s)  — 12-month trend for longitudinal context
+      - RiskAssessment  - per-tile probability with SHAP drivers as basis
+      - DetectedIssue   - regional hotspot alert with severity breakdown
+      - Observation(s)  - 12-month trend for longitudinal context
 
     Every entry has a proper `request.method=POST` so the bundle can be
     submitted directly to a FHIR server without any transformation. This is
@@ -1533,7 +1533,7 @@ async def generate_fhir_bundle_for_pho(
 
     entries: list[dict] = []
 
-    # RiskAssessment — first so every valid bundle leads with the primary signal.
+    # RiskAssessment - first so every valid bundle leads with the primary signal.
     if risk_data:
         ra = to_fhir_risk_assessment(tile_id, pathogen, info, risk_data)
         entries.append({
@@ -1565,7 +1565,7 @@ async def generate_fhir_bundle_for_pho(
     # FHIR R4 requires `Bundle.timestamp` to be a valid `instant` (ISO 8601 datetime).
     # Using the current UTC instant always validates; the semantic month lives on
     # each child resource (RiskAssessment.occurrenceDateTime, DetectedIssue.identifiedDateTime).
-    # Bundle.id must match [A-Za-z0-9-.]{1,64} — Atlas tile IDs contain underscores
+    # Bundle.id must match [A-Za-z0-9-.]{1,64} - Atlas tile IDs contain underscores
     # (AT_sahel_12_5) which would otherwise fail validators like HAPI FHIR.
     import re as _re
     safe_bundle_id = _re.sub(r"[^A-Za-z0-9.-]", "-", f"aqtabio-{pathogen}-{tile_id}")
@@ -1603,7 +1603,7 @@ async def generate_fhir_bundle_for_pho(
 
 
 # ---------------------------------------------------------------------------
-# Tool 12: Disease X — pathogen-agnostic pre-spillover risk
+# Tool 12: Disease X - pathogen-agnostic pre-spillover risk
 # ---------------------------------------------------------------------------
 @mcp.tool()
 async def get_disease_x_risk(
@@ -1615,7 +1615,7 @@ async def get_disease_x_risk(
     zoonotic pathogen could emerge from this 25 km area within the lookback
     horizon, independent of which specific pathogen ultimately spills over.
 
-    This addresses the WHO R&D Blueprint's "Disease X" priority — pre-emergence
+    This addresses the WHO R&D Blueprint's "Disease X" priority - pre-emergence
     detection for the unknown pathogen of the next zoonotic event. Existing
     surveillance answers "is Ebola circulating?"; this tool answers "are the
     environmental conditions for ANY zoonotic emergence elevated here?"
@@ -1629,9 +1629,9 @@ async def get_disease_x_risk(
 
         This treats each pathogen's score as an estimate of P(spillover by
         pathogen_i | shared environmental drivers) under an independence
-        assumption. The assumption is approximate — real spillovers are
+        assumption. The assumption is approximate - real spillovers are
         partially correlated through shared drivers (deforestation, climate,
-        livestock density) — so the union likely OVER-estimates true Disease X
+        livestock density) - so the union likely OVER-estimates true Disease X
         risk in regions with multiple high-risk pathogens. This is documented
         rather than papered over; the conservative interpretation is "if all
         five contributing pathogens are elevated, treat the area as having
@@ -1662,7 +1662,7 @@ async def get_disease_x_risk(
         return err
 
     # All 8 trained zoonotic pathogens contribute to the Disease X aggregation.
-    # Derived from the canonical PATHOGENS registry — adding a pathogen there
+    # Derived from the canonical PATHOGENS registry - adding a pathogen there
     # automatically expands the Disease X aggregation, so the "pathogen-agnostic"
     # claim is structurally enforced rather than asserted in prose.
     pathogens = list(PATHOGENS.keys())
@@ -1702,7 +1702,7 @@ async def get_disease_x_risk(
         product_complement *= (1.0 - c["score"])
     p_any = round(1.0 - product_complement, 3)
 
-    # Risk tier — slightly different cutoffs from per-pathogen because the
+    # Risk tier - slightly different cutoffs from per-pathogen because the
     # union shifts the distribution upward by construction.
     if p_any >= 0.95:
         tier = "critical"
@@ -1729,7 +1729,7 @@ async def get_disease_x_risk(
             f"at {contributions[0]['score']}. "
             "This score combines all operational pathogens' per-tile risks "
             "into a single signal addressing the WHO R&D Blueprint's Disease X "
-            "priority — pre-emergence detection for unknown pathogens."
+            "priority - pre-emergence detection for unknown pathogens."
         ),
         "limitations": (
             "v0.1.0 interim heuristic. Probabilistic-union assumes independence "
@@ -1737,7 +1737,7 @@ async def get_disease_x_risk(
             "drivers create correlation). A dedicated pooled-label classifier is "
             "in development for Q3 2026 alongside the medRxiv preprint."
         ),
-        "blueprint_priority": "WHO R&D Blueprint — Disease X (Pathogen X)",
+        "blueprint_priority": "WHO R&D Blueprint - Disease X (Pathogen X)",
     }
 
 
@@ -1760,7 +1760,7 @@ async def get_hindcast(
 
     The counterfactual is INTENT-TO-PREVENT, not a measured intervention.
     Real-world response is shaped by political, logistic, and capacity factors
-    not modelled here. The tool is honest about that — see the `caveats` block
+    not modelled here. The tool is honest about that - see the `caveats` block
     in the response. The point of the tool is to make the lead-time window
     *operationally* concrete, not to claim cases averted.
 
@@ -1768,16 +1768,16 @@ async def get_hindcast(
         event_id: One of the recorded anchor events from `retrospective_validation`.
                   Defaults to the Wuhan SARS-CoV-2 event (53-day lead time).
         response_lead_time_days: Days between threshold-crossing and hypothetical
-                  response activation (default 30 — reflects WHO GOARN typical
+                  response activation (default 30 - reflects WHO GOARN typical
                   surge cadence).
 
     Returns:
-        actual_timeline       — recorded outbreak milestones from public sources
-        intervention_date     — threshold_crossed_date + response_lead_time_days
-        counterfactual_window — days between intervention and official notification
-        actions_available     — what could have happened in the window
-        caveats               — explicit limitations of the counterfactual
-        sources               — citation to retrospective_validation + WHO/ECDC DON
+        actual_timeline       - recorded outbreak milestones from public sources
+        intervention_date     - threshold_crossed_date + response_lead_time_days
+        counterfactual_window - days between intervention and official notification
+        actions_available     - what could have happened in the window
+        caveats               - explicit limitations of the counterfactual
+        sources               - citation to retrospective_validation + WHO/ECDC DON
     """
     # Reuse the same _EVENTS keyed off retrospective_validation. Stay in sync.
     actual = await retrospective_validation(event_id=event_id)
@@ -1875,7 +1875,7 @@ async def get_hindcast(
             f"{actual['prediction']['threshold_crossed_date']} for tile "
             f"{actual['tile_id']}. With a {response_lead_time_days}-day "
             f"response activation cadence, intervention would begin on "
-            f"{intervention.isoformat()} — leaving {counterfactual_window} days "
+            f"{intervention.isoformat()} - leaving {counterfactual_window} days "
             f"before the official notification of {notification.isoformat()}. "
             "The actions listed are pathogen-specific operational moves that "
             "fit inside that window."
@@ -1883,7 +1883,7 @@ async def get_hindcast(
         "caveats": [
             "Counterfactual is illustrative, not measured.",
             "Real response is shaped by political, logistic, and capacity factors not modelled.",
-            "No claim of cases-averted is made — the reduction depends on uptake, not on the signal alone.",
+            "No claim of cases-averted is made - the reduction depends on uptake, not on the signal alone.",
             "The threshold_crossed_score is a recorded retrospective attestation from v0.1.0, "
             "not a live model recomputation. The aggregate live recompute against the 25-event "
             "cohort is the deliverable of the Q3 2026 medRxiv preprint.",
@@ -1910,7 +1910,7 @@ async def submit_to_hapi_fhir(
     tile + pathogen + month, POST it to the public HAPI FHIR test server at
     https://hapi.fhir.org/baseR4, and return the assigned resource URL plus
     the HAPI server's HTTP status. This makes the "FHIR round-trip-tested"
-    claim a *callable* proof rather than just a written assertion — anyone
+    claim a *callable* proof rather than just a written assertion - anyone
     invoking this tool can fetch the resource back to verify schema conformance.
 
     The HAPI server is a public test server run by Smile CDR / James Agnew
@@ -1964,7 +1964,7 @@ async def submit_to_hapi_fhir(
     fhir_resource = to_fhir_risk_assessment(tile_id, pathogen, info, risk_data)
 
     # FHIR R4: POST to a resource-type endpoint must NOT include a client
-    # supplied `id` — the server assigns one. HAPI returns 412 (Precondition
+    # supplied `id` - the server assigns one. HAPI returns 412 (Precondition
     # Failed) intermittently when a deterministic client id collides with
     # an existing resource in the public test server. Strip the id from
     # the POST body and keep the AqtaBio identifier in subject.identifier
@@ -2043,12 +2043,12 @@ async def submit_to_hapi_fhir(
         "verify_with": (
             f"curl -H 'Accept: application/fhir+json' {risk_assessment_url}"
             if risk_assessment_url
-            else "Resource not created — see hapi_status"
+            else "Resource not created - see hapi_status"
         ),
         "deduplication_note": deduplication_note,
         "note": (
             "HAPI is a public FHIR test server; resources persist ~30 days. "
-            "AqtaBio sends only synthetic / population-level risk — no PHI. "
+            "AqtaBio sends only synthetic / population-level risk - no PHI. "
             "Client-supplied id stripped before POST so HAPI assigns its own; "
             "the AqtaBio logical id is returned as `aqta_logical_id` for "
             "traceability. Tool is idempotent on (pathogen, tile_id): a 412 "
@@ -2074,7 +2074,7 @@ async def submit_to_hapi_fhir(
 # as a single `sharp_context` argument so reviewers can see the bridge
 # explicitly. AqtaBio uses the patient address from the FHIR Patient
 # resource to derive the home tile, then runs population-level risk for that
-# area — no PHI is stored or returned. SHARP is the standard for agents to
+# area - no PHI is stored or returned. SHARP is the standard for agents to
 # carry healthcare context end-to-end without bespoke token handling.
 
 class _SharpContext(dict):
@@ -2109,7 +2109,7 @@ async def _fetch_patient_address(ctx: _SharpContext) -> dict:
     """
     Pull the FHIR Patient resource via the SHARP-propagated session and
     return the first usable address. PHI minimisation: only returns
-    {city, state, country, lat, lon} — never the full Patient resource.
+    {city, state, country, lat, lon} - never the full Patient resource.
     """
     base = ctx.fhir_base()
     pid = ctx.patient()
@@ -2120,7 +2120,7 @@ async def _fetch_patient_address(ctx: _SharpContext) -> dict:
     url = f"{base.rstrip('/')}/{pid}" if pid.startswith("Patient/") else f"{base.rstrip('/')}/Patient/{pid}"
     headers = {"Accept": "application/fhir+json"}
     if token:
-        headers["Authorization"] = f"Bearer {token}"
+        headers["Authorisation"] = f"Bearer {token}"
 
     async with httpx.AsyncClient(timeout=15.0) as client:
         try:
@@ -2175,7 +2175,7 @@ def _address_to_tile(addr: dict) -> Optional[str]:
         "AR": "SA-025-90001", "CL": "SA-025-90002", "BR": "SA-025-90003",
         "PY": "SA-025-90004", "UY": "SA-025-90005", "BO": "SA-025-90006",
         "PE": "SA-025-90007", "EC": "SA-025-90008", "CO": "SA-025-90009",
-        "MX": "NA-025-80003", "FK": "SA-025-90010",  # Falklands — cruise demo
+        "MX": "NA-025-80003", "FK": "SA-025-90010",  # Falklands - cruise demo
     }
     return by_country.get(country)
 
@@ -2218,7 +2218,7 @@ async def get_patient_local_risk(
     ctx = _normalise_sharp(sharp_context)
     if not ctx.patient():
         return {
-            "error": "No SHARP context. This tool needs an EHR session — "
+            "error": "No SHARP context. This tool needs an EHR session - "
                      "a SHARP-aware workspace injects it from the clinician's session.",
             "expected_context_keys": ["patient_id", "fhir_server", "access_token"],
         }
@@ -2290,7 +2290,7 @@ async def get_patient_local_risk(
 # Tool 16: SHARP-aware EHR FHIR write-back
 # ---------------------------------------------------------------------------
 # Hosts that emit_riskassessment_to_ehr is willing to write to without
-# explicit confirm_write=true. Public test sandboxes only — anything that
+# explicit confirm_write=true. Public test sandboxes only - anything that
 # could plausibly host real PHI requires the caller to opt in.
 _EHR_WRITE_ALLOWED_HOSTS = (
     "hapi.fhir.org",
@@ -2329,7 +2329,7 @@ async def emit_riskassessment_to_ehr(
     the destination. A non-sandbox host with `confirm_write=true` is
     accepted but flagged in the response.
 
-    Demonstrates the second half of SHARP context propagation — not just
+    Demonstrates the second half of SHARP context propagation - not just
     *reading* EHR data via the SMART-on-FHIR session, but *writing* an
     AqtaBio-derived resource back to the same EHR so the encounter has
     a durable, queryable surveillance signal attached to the patient
@@ -2423,7 +2423,7 @@ async def emit_riskassessment_to_ehr(
                 "Dry-run is the default to prevent accidental writes to a "
                 "real production EHR if a SHARP context is mis-configured. "
                 "PHI minimisation: the resource carries the patient "
-                "reference and population-level risk only — no clinical "
+                "reference and population-level risk only - no clinical "
                 "content beyond the area's ecological drivers."
             ),
         }
@@ -2433,7 +2433,7 @@ async def emit_riskassessment_to_ehr(
         "Accept": "application/fhir+json",
     }
     if ctx.token():
-        headers["Authorization"] = f"Bearer {ctx.token()}"
+        headers["Authorisation"] = f"Bearer {ctx.token()}"
 
     async with httpx.AsyncClient(timeout=20.0) as client:
         try:
@@ -2465,14 +2465,14 @@ async def emit_riskassessment_to_ehr(
         "pathogen": pathogen,
         "month": month,
         "verify_with": (
-            f"curl -H 'Authorization: Bearer …' "
+            f"curl -H 'Authorisation: Bearer …' "
             f"-H 'Accept: application/fhir+json' {rurl}"
-            if rurl else "Resource not created — see ehr_status"
+            if rurl else "Resource not created - see ehr_status"
         ),
         "note": (
             "Write succeeds for any FHIR R4 endpoint that accepts "
             "RiskAssessment. The SHARP bearer token from the clinician's "
-            "EHR session is forwarded verbatim — AqtaBio does not store "
+            "EHR session is forwarded verbatim - AqtaBio does not store "
             "or proxy it."
         ),
     }
@@ -2497,7 +2497,7 @@ async def emit_riskassessment_to_ehr(
 # Tool 18: Active-learning recommender for sentinel surveillance placement.
 #
 # The product wedge: AqtaBio does not predict the next pandemic. It tells
-# public health agencies — Africa CDC, ECDC, IHR-SEA, USAID, GAVI — where
+# public health agencies - Africa CDC, ECDC, IHR-SEA, USAID, GAVI - where
 # to place the next sentinel surveillance site so they can detect emergence
 # earlier under a finite budget. Active learning on spillover risk is a
 # 2024 research direction (Carlson Lab, Lloyd-Smith group); to our
@@ -2887,7 +2887,7 @@ async def handoff_to_triage(risk_assessment: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Tool 18: Self-test — calls every tool with sane defaults, reports failures
+# Tool 18: Self-test - calls every tool with sane defaults, reports failures
 # ---------------------------------------------------------------------------
 # RCA from the May 2026 deploy cycle: bugs like the `pilot` NameError in
 # list_pathogens shipped to production because no test exercised every tool
@@ -2929,7 +2929,7 @@ async def self_test() -> dict:
         ("generate_fhir_bundle_for_pho", {"tile_id": sample_tile_id, "pathogen": sample_pathogen}),
         ("get_disease_x_risk",        {"tile_id": sample_tile_id}),
         ("get_hindcast",              {"event_id": sample_event, "response_lead_time_days": 30}),
-        # Heavy / external-network tools — included but tagged so callers
+        # Heavy / external-network tools - included but tagged so callers
         # can opt out. These hit Anthropic / HAPI which adds latency.
         ("generate_outbreak_briefing",  {"pathogen": sample_pathogen}),
         ("explain_risk_drivers",      {"tile_id": sample_tile_id, "pathogen": sample_pathogen}),
@@ -2954,7 +2954,7 @@ async def self_test() -> dict:
             result = await fn(**kwargs)
             if isinstance(result, dict) and "error" in result and "expected_context_keys" not in result:
                 # SHARP tools return {"error":"No SHARP context..."} when given
-                # a bare context — that's *expected* behaviour for self-test,
+                # a bare context - that's *expected* behaviour for self-test,
                 # not a failure. Filter via expected_context_keys marker.
                 fails.append({"tool": name, "error": f"tool returned error: {str(result.get('error'))[:200]}"})
             else:
@@ -2973,7 +2973,7 @@ async def self_test() -> dict:
         "fails": fails,
         "note": (
             "Self-test runs every tool with default args. SHARP tools return "
-            "an expected error when no sharp_context is supplied — that's "
+            "an expected error when no sharp_context is supplied - that's "
             "filtered out. Treat any item in `fails` as a real bug."
         ),
     }

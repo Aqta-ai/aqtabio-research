@@ -2,9 +2,9 @@
 FHIR Resource Mappers for AqtaBio MCP Server
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Maps AqtaBio API responses to HL7 FHIR R4 resources:
-  - RiskAssessment  — per-tile spillover risk prediction
-  - DetectedIssue   — hotspot alert (tiles exceeding threshold)
-  - Observation      — time-series risk trend data
+  - RiskAssessment  - per-tile spillover risk prediction
+  - DetectedIssue   - hotspot alert (tiles exceeding threshold)
+  - Observation      - time-series risk trend data
 """
 
 from __future__ import annotations
@@ -193,7 +193,7 @@ def to_fhir_observation_series(
                 }
             )
 
-        # FHIR R4 rejects `component: null` — the field must be absent, not null.
+        # FHIR R4 rejects `component: null` - the field must be absent, not null.
         # Build the dict conditionally so we never serialise a null array.
         obs: dict = {
             "resourceType": "Observation",

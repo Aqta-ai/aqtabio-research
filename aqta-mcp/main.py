@@ -17,7 +17,7 @@ from server import mcp
 
 # Lifespan is wired below via @app.on_event("startup"/"shutdown") so that
 # BOTH the SSE and Streamable HTTP subapps' session managers come up.
-# Don't pass `lifespan=` here — doing so would invoke
+# Don't pass `lifespan=` here - doing so would invoke
 # `mcp.session_manager.run()` a second time (the streamable_http subapp's
 # lifespan_context already runs it), and StreamableHTTPSessionManager.run()
 # is one-shot per instance.
@@ -35,7 +35,7 @@ app.add_middleware(
 
 
 # ---------------------------------------------------------------------------
-# A2A v1.0 Agent Card — agent discovery endpoint (RFC 8615 well-known URI).
+# A2A v1.0 Agent Card - agent discovery endpoint (RFC 8615 well-known URI).
 # https://a2a-protocol.org/latest/specification/
 # Declared BEFORE app.mount("/") so FastAPI routes it before falling through
 # to the MCP handler.
@@ -84,7 +84,7 @@ _AGENT_CARD = {
     "protocol_version": "1.0",
     "protocolVersion": "1.0",  # camelCase alias per A2A v1.0 JSON representation
     "provider": {
-        "organization": "Aqta Technologies Limited",
+        "organisation": "Aqta Technologies Limited",
         "url": "https://aqtabio.org",
     },
     "model_info": {
@@ -220,7 +220,7 @@ _AGENT_CARD = {
         # `model_status` is "trained" when a dedicated XGBoost + SHAP model
         # is bundled at models/{id}/model.ubj, and "training" when the
         # pathogen schema and ecological feature pipeline are wired but the
-        # dedicated classifier has not yet been trained — in which case the
+        # dedicated classifier has not yet been trained - in which case the
         # score falls back to the calibrated heuristic. Both states are
         # surfaced honestly so downstream callers can choose how to weight
         # the signal.
@@ -248,13 +248,13 @@ _AGENT_CARD = {
 
 @app.get("/.well-known/agent.json", include_in_schema=False)
 async def agent_card():
-    """A2A v1.0 Agent Card — served at the RFC 8615 well-known URI."""
+    """A2A v1.0 Agent Card - served at the RFC 8615 well-known URI."""
     return JSONResponse(_AGENT_CARD, headers={"Cache-Control": "public, max-age=300"})
 
 
 @app.get("/.well-known/agent-card.json", include_in_schema=False)
 async def agent_card_alias():
-    """Alias — some A2A client libraries look at `agent-card.json`."""
+    """Alias - some A2A client libraries look at `agent-card.json`."""
     return JSONResponse(_AGENT_CARD, headers={"Cache-Control": "public, max-age=300"})
 
 
@@ -351,11 +351,11 @@ async def info():
 
 # Dual MCP transport so older AND newer clients both connect:
 #
-#   POST /mcp         — Streamable HTTP (MCP 2025-03-26+, current spec).
+#   POST /mcp         - Streamable HTTP (MCP 2025-03-26+, current spec).
 #                       Used by Claude Desktop, mcp-inspector, recent
 #                       Prompt Opinion versions.
-#   GET  /sse         — legacy SSE channel (MCP 2024-11-05 spec).
-#   POST /messages/   — legacy paired POST endpoint.
+#   GET  /sse         - legacy SSE channel (MCP 2024-11-05 spec).
+#   POST /messages/   - legacy paired POST endpoint.
 #                       Used by older Prompt Opinion clients and any MCP
 #                       integration written before the Streamable HTTP
 #                       unification.

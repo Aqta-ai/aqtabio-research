@@ -14,7 +14,7 @@ summary of the same information.
 
 ## 2026-05-08
 
-**Hardened** — `emit_riskassessment_to_ehr` defaults to dry-run.
+**Hardened** - `emit_riskassessment_to_ehr` defaults to dry-run.
 
   Previously the tool POSTed to the SHARP-supplied `fhir_server`
   on a single RPC, which means a mis-configured workspace could
@@ -36,7 +36,7 @@ summary of the same information.
 
 ## 2026-05-08 (later, again)
 
-**Renamed** — `/auth/judge-token` and `/auth/judge-exchange` to
+**Renamed** - `/auth/judge-token` and `/auth/judge-exchange` to
 `/auth/evaluator-token` and `/auth/evaluator-exchange`.
 
   The old "judge" route names conflated adjudication framing with
@@ -53,7 +53,7 @@ summary of the same information.
   "evaluator" is used for newly minted users; "judge" remains in the
   `allowed_roles` set so legacy DB rows continue to validate.
 
-**Fixed** — `/health.data_freshness_hours` returned the 999.0 sentinel
+**Fixed** - `/health.data_freshness_hours` returned the 999.0 sentinel
 even when the prediction pipeline was current.
 
   Root cause: the metric was computed from `MAX(features.as_of_date)`,
@@ -71,7 +71,7 @@ even when the prediction pipeline was current.
 
 ## 2026-05-08 (later)
 
-**Added** — `2018_lassa_nigeria` anchor event in `retrospective_validation`.
+**Added** - `2018_lassa_nigeria` anchor event in `retrospective_validation`.
 
   Eighth historical anchor on the live MCP. Edo / Ondo / Ebonyi
   states, Nigeria; threshold-crossing 2017-11-12 at score 0.73;
@@ -81,7 +81,7 @@ even when the prediction pipeline was current.
   is the Nigeria CDC declaration; cross-checkable against the 2018
   WHO Disease Outbreak News for Lassa fever Nigeria.
 
-**Hardened** — Live MCP image pinned to immutable tag.
+**Hardened** - Live MCP image pinned to immutable tag.
 
   App Runner service `aqta-mcp` (eu-west-1) switched from
   `aqta-mcp:latest` to `aqta-mcp:v0.1.0-submission` in ECR. The
@@ -90,7 +90,7 @@ even when the prediction pipeline was current.
   `:latest` can no longer change what the public live endpoint
   serves. A local tarball backup of the same digest is held offline.
 
-**Cleaned** — Removed overclaim language from `/.well-known/agent.json`.
+**Cleaned** - Removed overclaim language from `/.well-known/agent.json`.
 
   The agent card description previously read "Predicts pandemic
   risk 53 days before WHO notification". Replaced with the
@@ -105,7 +105,7 @@ even when the prediction pipeline was current.
 
 ## 2026-05-08
 
-**Added** — `optimise_sentinel_placement` MCP tool, `aqta-mcp/server.py`.
+**Added** - `optimise_sentinel_placement` MCP tool, `aqta-mcp/server.py`.
 
   Active-learning recommender for sentinel surveillance placement.
   Given a region, pathogens of concern, the agency's existing
@@ -129,7 +129,7 @@ even when the prediction pipeline was current.
 
   Source: [`aqta-mcp/server.py`](aqta-mcp/server.py).
 
-**Added** — `submit_to_hapi_fhir` made idempotent on (pathogen, tile_id).
+**Added** - `submit_to_hapi_fhir` made idempotent on (pathogen, tile_id).
 
   Strips client-supplied `id` from the FHIR R4 resource before
   POST (FHIR R4: server assigns ids; client ids on POST are
@@ -140,28 +140,28 @@ even when the prediction pipeline was current.
   it with `hapi_status: 200`. Idempotent within HAPI's ~30 day
   persistence window.
 
-**Added** — Reference Python agent and no-key smoke test.
+**Added** - Reference Python agent and no-key smoke test.
 
-  - `aqta-mcp/adk_briefing_agent.py` — Google ADK + Gemini wrapper
+  - `aqta-mcp/adk_briefing_agent.py` - Google ADK + Gemini wrapper
     that composes the MCP tool surface into a sentinel-placement
     flow. ADK path with google-genai fallback for environments
     where ADK is not yet installed.
-  - `aqta-mcp/smoke_test_mcp_flow.py` — no-key end-to-end test;
+  - `aqta-mcp/smoke_test_mcp_flow.py` - no-key end-to-end test;
     exercises tools/list, optimise_sentinel_placement, get_risk_score
     with FHIR R4 output, submit_to_hapi_fhir round-trip.
 
-**Added** — `aqta-mcp/MCP_USAGE.md` paste-ready curl examples that
+**Added** - `aqta-mcp/MCP_USAGE.md` paste-ready curl examples that
 include the required `Accept: application/json, text/event-stream`
 header.
 
-**Removed** — `docs/research/preprint-outline.md` (was a working draft
+**Removed** - `docs/research/preprint-outline.md` (was a working draft
 with placeholder slots; pre-empted the eventual medRxiv submission).
 
-**Removed** — `docs/research/RESEARCHER_GUIDE.md` and
+**Removed** - `docs/research/RESEARCHER_GUIDE.md` and
 `docs/research/API_EXAMPLES.md` (exposed an internal access code and
 referenced legacy authentication endpoints).
 
-**Removed** — `aqta-mcp/agent-config.md` (stale tool counts, internal
+**Removed** - `aqta-mcp/agent-config.md` (stale tool counts, internal
 pitch material; the legitimate parts now live in MCP_USAGE.md with
 honest framing).
 
@@ -169,7 +169,7 @@ honest framing).
 
 ## 2026-04-30
 
-**Added** — `scripts/verify_mcp.py` (five-step MCP smoke test).
+**Added** - `scripts/verify_mcp.py` (five-step MCP smoke test).
 
 (Initial sync prior to the May refactor; see git history for detail.)
 
@@ -177,17 +177,17 @@ honest framing).
 
 ## 2026-04-29
 
-**Added** — `docs/SECURITY.md` (vulnerability disclosure + closed/open
+**Added** - `docs/SECURITY.md` (vulnerability disclosure + closed/open
 boundary).
 
 ---
 
 ## 2026-04-28
 
-**Added** — `get_disease_x_risk` MCP tool (pathogen-agnostic spillover
+**Added** - `get_disease_x_risk` MCP tool (pathogen-agnostic spillover
 score across the eight priority pathogens via probabilistic union).
 
-**Added** — `data/recorded-attestations.json` (citable historical
+**Added** - `data/recorded-attestations.json` (citable historical
 spillover anchors with publicly verifiable WHO / ECDC notification
 dates).
 
@@ -195,7 +195,7 @@ dates).
 
 ## 2026-04-27
 
-**Initial commit** — AqtaBio v0.1.0 research artefacts.
+**Initial commit** - AqtaBio v0.1.0 research artefacts.
 
   XGBoost + SHAP per-pathogen models, the 25-event historical cohort
   definition, the 8-layer governance framework, the EU AI Act

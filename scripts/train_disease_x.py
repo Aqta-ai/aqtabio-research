@@ -25,8 +25,8 @@ Usage:
         --random-seed 42
 
 Output:
-    models/disease-x/model.ubj   — XGBoost booster
-    models/disease-x/model_card.md — feature columns, training metrics, drift metadata
+    models/disease-x/model.ubj   - XGBoost booster
+    models/disease-x/model_card.md - feature columns, training metrics, drift metadata
 
 Once shipped, replace the probabilistic-union body of
 `get_disease_x_risk` in aqta-mcp/server.py with a call into the
@@ -46,7 +46,7 @@ from pathlib import Path
 logger = logging.getLogger("train_disease_x")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-# Default feature columns — MUST match the per-pathogen models so SHAP
+# Default feature columns - MUST match the per-pathogen models so SHAP
 # attributions are interpretable across the same feature space.
 FEATURE_COLS = [
     "biotic_transition_index",
@@ -169,7 +169,7 @@ def train(args: argparse.Namespace) -> None:
         from sklearn.model_selection import train_test_split
         from sklearn.metrics import roc_auc_score, average_precision_score, brier_score_loss
     except ImportError as exc:
-        logger.error("Missing ML deps: %s — install with `pip install xgboost scikit-learn pandas numpy`", exc)
+        logger.error("Missing ML deps: %s - install with `pip install xgboost scikit-learn pandas numpy`", exc)
         sys.exit(2)
 
     engine = make_engine(args.db_url)

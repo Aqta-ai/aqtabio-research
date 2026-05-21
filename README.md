@@ -1,16 +1,16 @@
-# AqtaBio — Research artefacts
+# AqtaBio - Research artefacts
 
-Pre-etiologic zoonotic-spillover risk forecasting at 25 km tile resolution. Includes the **first deployed pathogen-agnostic Disease X tool** addressing the WHO R&D Blueprint's eleventh priority — pre-emergence detection for the unknown pathogen of the next pandemic.
+Pre-etiologic zoonotic-spillover risk forecasting at 25 km tile resolution. Includes the **first deployed pathogen-agnostic Disease X tool** addressing the WHO R&D Blueprint's eleventh priority - pre-emergence detection for the unknown pathogen of the next pandemic.
 
-This repository is the **public research mirror** for the AqtaBio platform built by [Aqta Technologies Limited](https://aqta.ai) (Dublin, Ireland). It contains the methodology, validation cohort, governance framework, regulatory pathway note, MCP server source, and forthcoming-preprint scaffolding. The closed product source — operational infrastructure, deployment configuration, customer-facing dashboard, internal pitch material — is not in this repository and is not part of the open release.
+This repository is the **public research mirror** for the AqtaBio platform built by [Aqta Technologies Limited](https://aqta.ai) (Dublin, Ireland). It contains the methodology, validation cohort, governance framework, regulatory pathway note, MCP server source, and forthcoming-preprint scaffolding. The closed product source - operational infrastructure, deployment configuration, customer-facing dashboard, internal pitch material - is not in this repository and is not part of the open release.
 
 ## Status
 
-**v0.1.0 — research preview.** Not approved for clinical decision-making. Not approved for individual-patient diagnostic use. Outputs are population-level risk scores intended to inform pre-positioning decisions by public-health agencies. No conformity assessment under EU AI Act, EU MDR, or US FDA has yet been completed; the regulatory pathway and full classification rationale are available on request to <partnerships@aqtabio.org>.
+**v0.1.0 - research preview.** Not approved for clinical decision-making. Not approved for individual-patient diagnostic use. Outputs are population-level risk scores intended to inform pre-positioning decisions by public-health agencies. No conformity assessment under EU AI Act, EU MDR, or US FDA has yet been completed; the regulatory pathway and full classification rationale are available on request to <partnerships@aqtabio.org>.
 
 **Aggregate validation pending.** The retrospective attestations for the seven anchor events distributed with this release were recorded during the v0.1.0 development cycle, not produced by a live recompute against the production atlas-tile pipeline (which begins May 2024). Pathogen-specific backtests have produced AUROC values up to 0.975 for ebola (held-out time-aware splits); a cross-pathogen aggregate AUROC, AUCPR, and lead-time distribution across the full 25-event cohort is the deliverable of the forthcoming medRxiv preprint, target Q3 2026. A focused capabilities-and-limits statement and the validation methodology are available on request.
 
-**Regulatory positioning.** AqtaBio is classified as a candidate high-risk AI system under EU AI Act (Regulation (EU) 2024/1689) Annex III §5(a) — public authorities using AI to evaluate eligibility for essential public services. A 12-month conformity roadmap aligned to ISO/IEC 42001:2023 (AI management system) is maintained internally and shared with pilot partners under engagement.
+**Regulatory positioning.** AqtaBio is classified as a candidate high-risk AI system under EU AI Act (Regulation (EU) 2024/1689) Annex III §5(a) - public authorities using AI to evaluate eligibility for essential public services. A 12-month conformity roadmap aligned to ISO/IEC 42001:2023 (AI management system) is maintained internally and shared with pilot partners under engagement.
 
 ## What is here
 
@@ -31,8 +31,8 @@ To exercise the live system, use the public MCP endpoint listed below. Curl exam
 
 All endpoints are public and require no authentication. The canonical web entry point is <https://aqtabio.org/mcp> (connection snippets, sample prompts, and link-out to the live MCP); the AWS App Runner URL below is the programmatic target an MCP client connects to.
 
-- **MCP server (programmatic)**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp` — nineteen tools including `optimise_sentinel_placement`, `retrospective_validation`, `get_risk_score`, `get_hotspots`, `generate_outbreak_briefing`, `submit_to_hapi_fhir`, `self_test`. Streamable HTTP transport (set `Accept: application/json, text/event-stream`). See [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md).
-- **A2A v1.0 agent card**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/.well-known/agent.json` — RFC 8615 well-known URI declaring capabilities and per-pathogen SNOMED CT codes.
+- **MCP server (programmatic)**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp` - nineteen tools including `optimise_sentinel_placement`, `retrospective_validation`, `get_risk_score`, `get_hotspots`, `generate_outbreak_briefing`, `submit_to_hapi_fhir`, `self_test`. Streamable HTTP transport (set `Accept: application/json, text/event-stream`). See [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md).
+- **A2A v1.0 agent card**: `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/.well-known/agent.json` - RFC 8615 well-known URI declaring capabilities and per-pathogen SNOMED CT codes.
 
 ## Validation cohort
 

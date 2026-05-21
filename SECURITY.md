@@ -17,14 +17,14 @@ If the issue concerns the live MCP endpoint or the production REST API, please f
 
 The code in this repository is the **public research mirror** for AqtaBio. It is licensed under Apache 2.0. You may inspect it, fork it, cite it, and reuse it under the terms of the licence. Specifically the following are open:
 
-- `aqta-mcp/` — Model Context Protocol server source code
-- `aqta_bio/backtesting/historical_events.py` — the 25-event historical spillover cohort
-- `aqta_bio/governance/` — the 8-layer bio-domain governance framework
-- `aqta_bio/model/` — XGBoost + SHAP framework wrapper code (per-pathogen model cards in markdown form, not the trained weights)
-- `scripts/train_disease_x.py` — training script for the dedicated Disease X classifier
-- `data/recorded-attestations.json` — citable retrospective attestations
-- `docs/research/` — methodology, validation framework, preprint outline, known limitations
-- `docs/regulatory/` — EU AI Act Annex III §5(a) classification and 12-month conformity roadmap
+- `aqta-mcp/` - Model Context Protocol server source code
+- `aqta_bio/backtesting/historical_events.py` - the 25-event historical spillover cohort
+- `aqta_bio/governance/` - the 8-layer bio-domain governance framework
+- `aqta_bio/model/` - XGBoost + SHAP framework wrapper code (per-pathogen model cards in markdown form, not the trained weights)
+- `scripts/train_disease_x.py` - training script for the dedicated Disease X classifier
+- `data/recorded-attestations.json` - citable retrospective attestations
+- `docs/research/` - methodology, validation framework, preprint outline, known limitations
+- `docs/regulatory/` - EU AI Act Annex III §5(a) classification and 12-month conformity roadmap
 
 ## What's NOT in scope of this repository
 
@@ -51,7 +51,7 @@ The following components of the AqtaBio platform are **not** distributed here an
 
 ```bibtex
 @misc{aqtabio_research_v0_1_0,
-  title  = {AqtaBio — pre-etiologic zoonotic spillover risk forecasting (research mirror)},
+  title  = {AqtaBio - pre-etiologic zoonotic spillover risk forecasting (research mirror)},
   author = {Chueayen, Anya},
   year   = {2026},
   url    = {https://github.com/Aqta-ai/aqtabio-research},
