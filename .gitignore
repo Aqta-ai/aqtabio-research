@@ -21,3 +21,6 @@ build/
 # Models (distributed under separate agreement; see README)
 models/**/*.ubj
 models/**/*.pkl
+
+# Gemini working files
+.gemini/

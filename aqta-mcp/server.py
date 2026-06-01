@@ -36,10 +36,19 @@ from fhir import (
 
 logger = logging.getLogger(__name__)
 
-API_BASE = os.getenv(
-    "AQTA_API_URL",
-    "https://kfj3domgfgegnd7aqtfwpdj56y0evnyv.lambda-url.eu-west-1.on.aws",
-)
+# Backend API URL is loaded from env, never from a hardcoded default.
+# The production Lambda URL is operational infrastructure and must not
+# leak into this OSS mirror. Local dev: set AQTA_API_URL in your shell
+# or .env. Failing fast here keeps a forgotten env var from quietly
+# pointing production traffic at the wrong endpoint.
+_API_BASE_FROM_ENV = os.getenv("AQTA_API_URL", "").strip()
+if not _API_BASE_FROM_ENV:
+    raise RuntimeError(
+        "AQTA_API_URL is not set. Required to reach the AqtaBio backend. "
+        "Set it in the deploy environment (App Runner service config) "
+        "or in your local .env file. Do NOT commit the value."
+    )
+API_BASE = _API_BASE_FROM_ENV
 
 PATHOGENS = {
     "ebola": {"display": "Ebola Virus Disease", "snomed": "37109004", "region": "Africa (Sahel, Horn)"},
