@@ -1111,7 +1111,7 @@ async def explain_risk_drivers(
             recommended_actions = [
                 "Cross-reference top SHAP drivers against the field surveillance brief for this tile.",
                 "Engage the pathogen-specific epidemiology team for verification before public alerts.",
-                "Re-query AqtaCore-signed receipts for the prediction chain underlying this score.",
+                "Re-query the signed prediction receipts for the underlying chain.",
             ]
 
     return {
