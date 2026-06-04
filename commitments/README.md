@@ -11,6 +11,40 @@ Files dated on or before 2026-05-21 use the prior `YYYY-WWW.json`
 ISO-week filename convention; the cadence flipped to bimonthly from
 that date forward.
 
+A weekly variant is also produced by
+[`scripts/generate_weekly_commitment.py`](../scripts/generate_weekly_commitment.py),
+run each Monday at 09:00 UTC. The weekly file lands as
+`commitments/YYYY-WNN.json` and is generated from the same live MCP as
+the bimonthly file; both feed the same ledger and use the schema in
+[`SCHEMA.md`](./SCHEMA.md). The weekly script is idempotent: if this
+week's file already exists, it exits without overwriting.
+
+To produce the current week's file manually:
+
+```bash
+python3 scripts/generate_weekly_commitment.py
+```
+
+To preview without writing:
+
+```bash
+python3 scripts/generate_weekly_commitment.py --dry-run
+```
+
+To sign with the ledger's Ed25519 key, export
+`AQTABIO_COMMITMENT_PRIVATE_KEY_B64` (32-byte raw seed, base64)
+before running; the resulting file gains a `signature` block whose
+`key_fingerprint` should match the one published in
+[`SECURITY.md`](../SECURITY.md).
+
+The inaugural commitment is
+[`commitments/2026-W19.json`](./2026-W19.json), generated on
+2026-05-09. It ranked Bundibugyo-adjacent tiles in the Congo Basin
+among the top five for Ebola eight days before WHO confirmed an
+outbreak in DR Congo on 2026-05-17. The W19 file is on public git
+history before the WHO notification, so the lead time is verifiable
+from `git log --follow`.
+
 The intent is to convert AqtaBio's claim from "we caught these
 historical events in backtest" to "we are placing public, dated,
 independently-verifiable bets and being measured against outbreaks
