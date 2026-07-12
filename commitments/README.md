@@ -2,10 +2,11 @@
 
 This folder is an append-only public record of forward-looking risk
 predictions made by AqtaBio. On the 1st and 15th of each month a new
-file `commitments/YYYY-MM-DD.json` lands here, signed by the founder's
-GPG/SSH-verified git commit. Each file names the highest-risk seeded
-tiles per pathogen for the fortnight ahead, **before any outbreak in
-that window has been notified by WHO, ECDC, or a national MoH**.
+file `commitments/YYYY-MM-DD.json` lands here as a public, timestamped
+git commit, so the record and its ordering are fixed at commit time.
+Each file names the highest-risk seeded tiles per pathogen for the
+fortnight ahead, **before any outbreak in that window has been notified
+by WHO, ECDC, or a national MoH**.
 
 Files dated on or before 2026-05-21 use the prior `YYYY-WWW.json`
 ISO-week filename convention; the cadence flipped to bimonthly from
@@ -87,9 +88,10 @@ date, and it returns the relevant commitment entry (or none).
   09:00 UTC.
 - The action records the App Runner image digest at the time of
   generation in the file's `model_digest` field.
-- The action commits the file to this repository with the founder's
-  GPG-signed git author. GitHub's verified-commit badge is the
-  on-platform proof of authorship and timestamp.
+- The action commits the file to this repository as an append-only
+  public commit. The public commit timestamp and the git hash-chain
+  (`git log --follow`) fix the record and its ordering; anyone can
+  check a commitment predates a later WHO / ECDC / MoH notification.
 - Each new commitment file is also auto-snapshotted to the
   Internet Archive (`web.archive.org`) so the public timestamp does
   not depend on github.com remaining honest.

@@ -2,7 +2,7 @@
 
 ## Reporting a security issue
 
-If you find a vulnerability in the code published in this repository (the AqtaBio MCP server, the governance framework, the model wrapper code, or any of the supporting scripts), please **do not file a public GitHub issue.** Instead, email <security@aqta.ai> with:
+If you find a vulnerability in the code published in this repository (the AqtaBio MCP server, the accountability framework, the model wrapper code, or any of the supporting scripts), please **do not file a public GitHub issue.** Instead, email <security@aqta.ai> with:
 
 - A description of the issue
 - Steps to reproduce
@@ -19,7 +19,7 @@ The code in this repository is the **public research mirror** for AqtaBio. It is
 
 - `aqta-mcp/` - Model Context Protocol server source code
 - `aqta_bio/backtesting/historical_events.py` - the 25-event historical spillover cohort
-- `aqta_bio/governance/` - the 8-layer bio-domain governance framework
+- `aqta_bio/governance/` - the 8-layer bio-domain accountability framework
 - `aqta_bio/model/` - XGBoost + SHAP framework wrapper code (per-pathogen model cards in markdown form, not the trained weights)
 - `scripts/train_disease_x.py` - training script for the dedicated Disease X classifier
 - `scripts/verify_against_don.py`, `scripts/verify_mcp.py` - verification helpers for retrospective attestations and the live MCP endpoint
@@ -42,7 +42,7 @@ The following components of the AqtaBio platform are **not** distributed here an
 
 ## If you want to use AqtaBio in research or piloting
 
-- **For research using only the methodology / validation cohort / governance framework**: clone this repo, cite as below, no partnership needed.
+- **For research using only the methodology / validation cohort / accountability framework**: clone this repo, cite as below, no partnership needed.
 - **For research that needs the trained models** (to reproduce per-pathogen risk scores or run new validation against held-out events): contact <partnerships@aqtabio.org> describing your research question, institution, and intended use. Trained models are released under a separate research-pilot agreement that includes citation, non-redistribution, and reasonable disclosure terms.
 - **For evaluation pilots with public-health agencies** (Africa CDC, ECDC, national PHOs, WHO GOARN): contact <partnerships@aqtabio.org>. We're actively seeking first-pilot partners on the validation-cohort regions.
 - **For commercial integration** (FHIR-based EMR vendors, biosurveillance platforms, healthcare AI orchestrators): contact <partnerships@aqtabio.org>.

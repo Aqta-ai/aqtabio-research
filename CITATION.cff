@@ -17,8 +17,8 @@ abstract: >-
   Validation cohort: twenty-five historical zoonotic spillover events spanning
   2003 to 2024, anchored to publicly verifiable WHO Disease Outbreak News, ECDC
   weekly bulletins, and national Ministry of Health notification dates. Eight-
-  layer governance framework with HITL sign-off, model version pinning, immutable
-  audit trail, and bias monitoring. MCP server with eleven tools, FHIR R4
+  layer accountability framework with HITL sign-off, model version pinning, immutable
+  audit trail, and bias monitoring. MCP server with nineteen tools, FHIR R4
   transaction Bundle output, A2A v1.0 agent card, SNOMED CT pathogen codes.
   v0.1.0 research preview, not approved for clinical decision-making.
 keywords:

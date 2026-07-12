@@ -1,8 +1,8 @@
 # AqtaBio - Research artefacts
 
-Pre-etiologic zoonotic-spillover risk forecasting at 25 km tile resolution. Includes the **first deployed pathogen-agnostic Disease X tool** addressing the WHO R&D Blueprint's eleventh priority - pre-emergence detection for the unknown pathogen of the next pandemic.
+Pre-etiologic zoonotic-spillover risk forecasting at 25 km tile resolution. Includes a **pathogen-agnostic Disease X scoring tool** (`get_disease_x_risk`) addressing the WHO R&D Blueprint's eleventh priority: pre-emergence signals for the unknown pathogen of the next pandemic (recorded v0.1.0 attestation; aggregate cohort recompute is the Q3 2026 medRxiv deliverable).
 
-This repository is the **public research mirror** for the AqtaBio platform built by [Aqta Technologies Limited](https://aqta.ai) (Dublin, Ireland). It contains the live MCP server source, the 25-event validation cohort, the 8-layer bio-domain governance framework, the XGBoost + SHAP wrapper code and per-pathogen model cards, dated pre-event commitment files, and citable retrospective attestations. The closed product source - operational infrastructure, deployment configuration, customer-facing dashboard, internal pitch material - is not in this repository and is not part of the open release.
+This repository is the **public research mirror** for the AqtaBio platform built by [Aqta Technologies Limited](https://aqta.ai) (Dublin, Ireland). It contains the live MCP server source, the 25-event validation cohort, the 8-layer bio-domain accountability framework, the XGBoost + SHAP wrapper code and per-pathogen model cards, dated pre-event commitment files, and citable retrospective attestations. The closed product source - operational infrastructure, deployment configuration, customer-facing dashboard, internal pitch material - is not in this repository and is not part of the open release.
 
 ## Status
 
@@ -16,7 +16,7 @@ This repository is the **public research mirror** for the AqtaBio platform built
 |---|---|
 | [`aqta-mcp/`](aqta-mcp/) | Public MCP (Model Context Protocol) server source. **Nineteen tools** including `optimise_sentinel_placement` (active-learning surveillance recommender), `get_disease_x_risk` (pathogen-agnostic), FHIR R4 native, A2A v1.0 agent card, SNOMED CT pathogen codes. Live at `https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp`. Usage examples in [`aqta-mcp/MCP_USAGE.md`](aqta-mcp/MCP_USAGE.md). |
 | [`aqta_bio/backtesting/historical_events.py`](aqta_bio/backtesting/historical_events.py) | The 25-event historical spillover cohort (2003–2024), each anchored to a publicly verifiable WHO Disease Outbreak News, ECDC weekly bulletin, or national MoH notification date. |
-| [`aqta_bio/governance/`](aqta_bio/governance/) | The 8-layer bio-domain governance gateway: data provenance, SHAP feature hash, model version pinning, 90-day data-freshness circuit breaker, HITL epidemiologist sign-off queue, RBAC, immutable audit log, bias monitoring. Specific to biosurveillance; separate codebase from the commercial Aqta runtime governance engine that lives in a different repository. |
+| [`aqta_bio/governance/`](aqta_bio/governance/) | The 8-layer bio-domain accountability gateway: data provenance, SHAP feature hash, model version pinning, 90-day data-freshness circuit breaker, HITL epidemiologist sign-off queue, RBAC, immutable audit log, bias monitoring. Biosurveillance-specific; lives in this repository under `aqta_bio/governance/` (directory name retained for import stability). |
 | [`aqta_bio/model/`](aqta_bio/model/) | XGBoost + SHAP framework code and per-pathogen model cards. |
 
 ## What is **not** here
