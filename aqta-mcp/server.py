@@ -2129,7 +2129,7 @@ async def _fetch_patient_address(ctx: _SharpContext) -> dict:
     url = f"{base.rstrip('/')}/{pid}" if pid.startswith("Patient/") else f"{base.rstrip('/')}/Patient/{pid}"
     headers = {"Accept": "application/fhir+json"}
     if token:
-        headers["Authorisation"] = f"Bearer {token}"
+        headers["Authorization"] = f"Bearer {token}"
 
     async with httpx.AsyncClient(timeout=15.0) as client:
         try:
@@ -2442,7 +2442,7 @@ async def emit_riskassessment_to_ehr(
         "Accept": "application/fhir+json",
     }
     if ctx.token():
-        headers["Authorisation"] = f"Bearer {ctx.token()}"
+        headers["Authorization"] = f"Bearer {ctx.token()}"
 
     async with httpx.AsyncClient(timeout=20.0) as client:
         try:
@@ -2474,7 +2474,7 @@ async def emit_riskassessment_to_ehr(
         "pathogen": pathogen,
         "month": month,
         "verify_with": (
-            f"curl -H 'Authorisation: Bearer …' "
+            f"curl -H 'Authorization: Bearer …' "
             f"-H 'Accept: application/fhir+json' {rurl}"
             if rurl else "Resource not created - see ehr_status"
         ),
