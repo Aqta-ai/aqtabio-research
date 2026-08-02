@@ -315,9 +315,9 @@ async def list_pathogens() -> dict:
     operational = ["ebola", "h5n1", "cchfv", "wnv", "sea-cov", "mpox", "nipah", "hantavirus"]
     # Tile seeding state per pathogen. Must match the agent card's
     # pathogens_covered prediction_status field exactly. Drift between the
-    # tool response and the agent card has been a credibility hit in past
-    # probes; surface the same fields here so a judge calling list_pathogens
-    # sees the same live / pending split they see at /.well-known/agent.json.
+    # tool response and the agent card is a correctness bug, so surface the
+    # same fields here: a caller of list_pathogens must see the same
+    # live / pending split as /.well-known/agent.json.
     PREDICTION_STATUS = {
         "ebola": "live",
         "h5n1": "live",
