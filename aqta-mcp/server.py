@@ -266,7 +266,7 @@ def _hotspot_severity(hotspot_data: dict) -> str:
 
 
 # Known-good pathogen IDs. Used to fail fast with a helpful MCP error instead of
-# bubbling an httpx 404 stack trace when a judge types a typo or tries an
+# bubbling an httpx 404 stack trace when a caller types a typo or tries an
 # invented pathogen name.
 _KNOWN_PATHOGENS = set(PATHOGENS.keys())
 
