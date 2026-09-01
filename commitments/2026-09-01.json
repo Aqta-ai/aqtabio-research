@@ -1,0 +1,38 @@
+{
+  "commitment_date": "2026-09-01",
+  "cadence": "bimonthly (1st and 15th of each month)",
+  "generated_at": "2026-09-01T13:52:02+00:00Z",
+  "evaluation_window": {
+    "start": "2026-09-01",
+    "end": "2026-09-14"
+  },
+  "model": {
+    "name": "AqtaBio XGBoost ensemble",
+    "version": "v0.1.0",
+    "image_digest": "sha256:5f1e79d3d36fc66378a24c11a6261f8d8679f34005b75ae9a11463acacbfb4d9",
+    "mcp_endpoint": "https://qjtqgvpd9s.eu-west-1.awsapprunner.com/mcp"
+  },
+  "method": {
+    "tile_pool": "Lambda /tiles?pathogen={p}&limit=20",
+    "selection": "highest risk_score, prefer non-saturated (p90 - p10 > 0.001)",
+    "top_n_per_pathogen": 5
+  },
+  "pathogens_covered": [
+    "ebola",
+    "h5n1",
+    "cchfv",
+    "wnv",
+    "sea-cov"
+  ],
+  "pathogens_pending_tile_seeding": [
+    "mpox",
+    "nipah",
+    "hantavirus"
+  ],
+  "tiles": [],
+  "honest_caveats": [
+    "Risk score is population-level for a 25 km tile, not a per-patient diagnostic.",
+    "Coverage is sparse (578 production tiles); outbreaks in unseeded tiles record as `coverage_gap`, not `miss`.",
+    "No claim that an outbreak WILL occur in the listed tiles; the commitment is that AqtaBio considered these tiles highest-risk for the named pathogen during the named window."
+  ]
+}
